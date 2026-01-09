@@ -89,7 +89,7 @@ export default function ConfirmRestoreModal({
             <button
               onClick={onConfirm}
               disabled={loading}
-              className="flex-1 px-6 py-3.5 rounded-xl font-bold text-[13px] bg-emerald-600 text-white hover:bg-emerald-700 shadow-lg shadow-emerald-200 transition-all active:scale-[0.98] disabled:opacity-70 uppercase tracking-widest flex items-center justify-center gap-2"
+              className="flex-1 px-6 py-3.5 rounded-xl font-bold text-[13px] bg-emerald-600 text-white hover:bg-emerald-700 shadow-lg shadow-emerald-200 transition-all active:scale-[0.98] disabled:opacity-70 uppercase tracking-widest flex items-center justify-center gap-2 cursor-pointer"
             >
               {loading ? (
                 <>
