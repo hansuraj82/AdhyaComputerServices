@@ -1,0 +1,6 @@
+@import "tailwindcss";
+
+html {
+  /* This prevents the "jumping" layout shift across all pages */
+  scrollbar-gutter: stable;
+}
