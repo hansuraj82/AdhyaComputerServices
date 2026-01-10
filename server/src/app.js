@@ -5,7 +5,7 @@ import customerRoutes from "./routes/customer.routes.js";
 import errorHandler from "./middleware/error.middleware.js";
 
 const app = express();
-
+app.set('trust proxy', 1);
 app.use(cors());
 app.use(express.json());
 
