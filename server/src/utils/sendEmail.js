@@ -1,3 +1,7 @@
+import axios from 'axios';
+
+
+
 const sendEmail = async ({ to, subject, html, text }) => {
   const url = 'https://api.brevo.com/v3/smtp/email';
   
@@ -7,9 +11,11 @@ const sendEmail = async ({ to, subject, html, text }) => {
     subject: subject,
     htmlContent: html,
     textContent: text,
-    headers: {
-      "X-Mailin-Tag": "PasswordReset",
-      "X-Mailin-custom": "click_tracking_off"
+    
+    // THIS BLOCK DISABLES THE REDIRECT URL
+    configuration: {
+      clickTracking: false,
+      unsubscriptionPageId: 1 // Optional: Helps avoid spam filters
     }
   };
 
@@ -21,10 +27,14 @@ const sendEmail = async ({ to, subject, html, text }) => {
         'Accept': 'application/json'
       }
     });
+    console.log("Email Sent! Tracking is now OFF.");
     return response.data;
   } catch (err) {
-    throw new Error("Email delivery failed");
+    console.error("Brevo Error:", err.response?.data || err.message);
+    throw new Error("Failed to send clean link");
   }
 };
+
+
 
 export default sendEmail;
