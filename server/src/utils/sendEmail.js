@@ -1,34 +1,29 @@
-import nodemailer from "nodemailer";
+import axios from 'axios';
 
-// 1. Create the transporter ONCE outside the function
-const transporter = nodemailer.createTransport({
-  host: "smtp.gmail.com",
-  port: 465,
-  secure: true,
-  auth: {
-    user: process.env.EMAIL_USER,
-    pass: process.env.EMAIL_PASS // 16-digit App Password
-  },
-  // Higher timeouts for cloud environments
-  connectionTimeout: 15000, 
-  socketTimeout: 15000
-});
-
-const sendEmail = async ({ to, subject, text, html }) => {
-  // 2. REMOVED: await transporter.verify(); (It's redundant)
+const sendEmail = async ({ to, subject, html, text }) => {
+  const url = 'https://api.brevo.com/v3/smtp/email';
+  
+  const data = {
+    sender: { name: "Adhya Computer Web Services", email: process.env.EMAIL_USER },
+    to: [{ email: to }],
+    subject: subject,
+    htmlContent: html,
+    textContent: text
+  };
 
   try {
-    const info = await transporter.sendMail({
-      from: `"Adhya Computer Web Services" <${process.env.EMAIL_USER}>`,
-      to,
-      subject,
-      text,
-      html
+    const response = await axios.post(url, data, {
+      headers: {
+        'api-key': process.env.BREVO_API_KEY, // This puts it exactly where Brevo wants it
+        'Content-Type': 'application/json',
+        'Accept': 'application/json'
+      }
     });
-    return info;
+    console.log("Email Sent via Axios:", response.data.messageId);
+    return response.data;
   } catch (err) {
-    console.error("Email error:", err);
-    throw new Error("SMTP Connection Failed - Port likely blocked by host.");
+    console.error("Axios/Brevo Error:", err.response?.data || err.message);
+    throw new Error("API Authentication Failed");
   }
 };
 
