@@ -9,6 +9,7 @@ import ConfirmModal from "../ui/ConfirmModal";
 import UploadDropzone from "../ui/UploadDropzone";
 import { CiEdit } from "react-icons/ci";
 import { MdOutlineDownload, MdOutlineRemoveRedEye, MdDeleteOutline, MdOutlineBadge, MdOutlinePhone, MdOutlineHome, MdOutlineDescription } from "react-icons/md";
+import CustomerNotFound from "../CustomerNotFound";
 
 export default function CustomerDetails() {
     const { id } = useParams();
@@ -21,19 +22,32 @@ export default function CustomerDetails() {
     const [deleteDocId, setDeleteDocId] = useState(null);
     const [docLabel, setDocLabel] = useState("");
     const [error, setError] = useState("");
-    document.title = `Customer-Details | Adhya Computer`;
+    const [isNotFound, setIsNotFound] = useState(false); 
+
+    document.title = customer ? `${customer.name} | Details` : `Customer Details | Adhya Computer`;
 
     const fetchCustomer = async () => {
         try {
             setPageLoading(true);
+            setIsNotFound(false); // Reset state
             const res = await getCustomerById(id);
+            
+            if (!res.data) {
+                setIsNotFound(true);
+                return;
+            }
             setCustomer(res.data);
         } catch (err) {
-            toast.error(err.message || "Failed to load customer");
+            // 🔹 If the ID is invalid or not found, trigger the NotFound UI
+            if (err.response?.status === 404 || err.response?.status === 400 || err.response?.status === 500) {
+                setIsNotFound(true);
+            } else {
+                toast.error(err.message || "Failed to load customer");
+            }
         } finally {
             setPageLoading(false);
         }
-    };
+    }
 
     useEffect(() => { fetchCustomer(); }, [id]);
 
@@ -84,11 +98,14 @@ export default function CustomerDetails() {
             document.body.removeChild(link);
             window.URL.revokeObjectURL(blobUrl);
         } catch (error) {
-            console.error("Download failed:", error);
             // Fallback: Open in new tab if fetch fails (e.g., CORS issues)
             window.open(url, "_blank");
         }
     };
+
+    if (isNotFound) {
+        return <CustomerNotFound message="The customer ID provided is invalid or does not exist." />;
+    }
 
     if (pageLoading) return (
         <div className="flex flex-col items-center justify-center min-h-[60vh]">
@@ -106,9 +123,9 @@ export default function CustomerDetails() {
                         <span className="text-2xl font-bold">{customer?.name?.charAt(0)}</span>
                     </div>
                     <div>
-                        <h1 className="text-2xl font-bold text-slate-900">{customer.name}</h1>
+                        <h1 className="text-2xl font-bold text-slate-900">{customer?.name}</h1>
                         <p className="text-sm text-slate-500 flex items-center gap-1 uppercase tracking-wider font-semibold">
-                            {new Date(customer.createdAt).toLocaleString('en-IN', { dateStyle: 'medium', timeStyle: 'medium' })}
+                            {new Date(customer?.createdAt).toLocaleString('en-IN', { dateStyle: 'medium', timeStyle: 'medium' })}
                         </p>
                     </div>
                 </div>

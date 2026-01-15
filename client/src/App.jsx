@@ -12,6 +12,7 @@ const Login = lazy(() => import("./pages/auth/Login"));
 const ForgotPassword = lazy(() => import("./pages/auth/ForgotPassword"));
 const ResetPassword = lazy(() => import("./pages/auth/ResetPassword"));
 const ChangePassword = lazy(() => import("./pages/auth/ChangePassword"));
+const ChangeEmail = lazy(() => import("./pages/auth/ChangeEmail"));
 
 // 🔹 Lazy Loaded Customer Pages
 const Customers = lazy(() => import("./components/customers/Customers"));
@@ -31,12 +32,28 @@ export default function App() {
         toastOptions={{
           duration: 3000,
           style: {
-            maxWidth: '550px',
-            borderRadius: '16px',
-            background: '#0f172a',
-            color: '#fff',
-            fontSize: '14px'
-          }
+            background: '#fff',
+            color: '#0f172a', // Slate 900 for text
+            borderRadius: '12px',
+            border: '1px border-slate-200',
+            boxShadow: '0 10px 15px -3px rgba(0, 0, 0, 0.05), 0 4px 6px -2px rgba(0, 0, 0, 0.05)',
+            fontSize: '13px',
+            fontWeight: '600',
+            padding: '12px 20px',
+            maxWidth: '500px',
+          },
+          success: {
+            iconTheme: {
+              primary: '#6366f1', // Indigo 500
+              secondary: '#fff',
+            },
+          },
+          error: {
+            iconTheme: {
+              primary: '#ef4444', // Red 500
+              secondary: '#fff',
+            },
+          },
         }}
       />
 
@@ -66,10 +83,13 @@ export default function App() {
               <Route path="trash" element={<TrashCustomers />} />
               <Route path="edit/:id" element={<EditCustomer />} />
               <Route path=":id" element={<CustomerDetails />} />
+              <Route path="*" element={<NotFound />} />
             </Route>
 
             {/* Account Settings */}
             <Route path="change-password" element={<ChangePassword />} />
+            <Route path="change-email" element={<ChangeEmail />} />
+
           </Route>
 
           {/* ❌ 404 - Global Catch */}

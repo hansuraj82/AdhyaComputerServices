@@ -29,21 +29,34 @@ export default function TrashRow({ customer, isSelected, onSelect, onRestore, on
         </div>
       </div>
 
-      <div className="flex items-center gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
+      <div className="flex items-center gap-2 opacity-0 group-hover:opacity-100 group-hover:translate-x-0 translate-x-2 transition-all duration-300 ease-out">
+
+        {/* Restore Action */}
         <button
           onClick={() => onRestore(customer._id)}
-          className="p-2 text-slate-400 hover:text-emerald-600 hover:bg-emerald-50 rounded-lg transition-colors cursor-pointer"
-          title="Restore"
+          className="group/btn relative p-2.5 bg-white border border-slate-200 text-slate-400 hover:text-emerald-600 hover:border-emerald-200 hover:shadow-[0_4px_12px_rgba(16,185,129,0.15)] rounded-xl transition-all active:scale-90 cursor-pointer"
         >
-          <MdSettingsBackupRestore size={20} />
+          <MdSettingsBackupRestore size={18} className="group-hover/btn:rotate-[-45deg] transition-transform duration-300" />
+
+          {/* Floating Tooltip Label */}
+          <span className="absolute -top-10 left-1/2 -translate-x-1/2 px-2 py-1 bg-slate-900 text-[10px] text-white font-bold rounded-md opacity-0 group-hover/btn:opacity-100 transition-opacity pointer-events-none uppercase tracking-widest">
+            Restore
+          </span>
         </button>
+
+        {/* Permanent Delete Action */}
         <button
           onClick={() => onPermanentDelete(customer._id)}
-          className="p-2 text-slate-400 hover:text-red-600 hover:bg-red-50 rounded-lg transition-colors cursor-pointer"
-          title="Delete Permanently"
+          className="group/btn relative p-2.5 bg-white border border-slate-200 text-slate-400 hover:text-rose-600 hover:border-rose-200 hover:shadow-[0_4px_12px_rgba(244,63,94,0.15)] rounded-xl transition-all active:scale-90 cursor-pointer"
         >
-          <MdDeleteForever size={20} />
+          <MdDeleteForever size={18} className="group-hover/btn:scale-110 transition-transform" />
+
+          {/* Floating Tooltip Label */}
+          <span className="absolute -top-10 left-1/2 -translate-x-1/2 px-2 py-1 bg-rose-600 text-[10px] text-white font-bold rounded-md opacity-0 group-hover/btn:opacity-100 transition-opacity pointer-events-none uppercase tracking-widest whitespace-nowrap">
+            Delete
+          </span>
         </button>
+
       </div>
     </div>
   );

@@ -1,5 +1,5 @@
 import { NavLink } from "react-router-dom";
-import { MdPeople, MdDelete, MdAdd, MdLock } from "react-icons/md";
+import { MdPeople, MdDelete, MdAdd, MdLock, MdEmail } from "react-icons/md";
 
 export default function Sidebar({ isOpen, onClose }) {
   // 1. Structure: Use a light-gray bg to contrast against the white content/navbar
@@ -31,28 +31,31 @@ export default function Sidebar({ isOpen, onClose }) {
       <aside className={`${base} ${isOpen ? "translate-x-0" : "-translate-x-full"}`}>
         <div className="flex flex-col h-full">
 
-          {/* Section Label: Senior UI detail for better organization */}
-          <div className="px-6 mb-4">
-            <h2 className="text-[11px] font-bold uppercase tracking-[0.15em] text-slate-400">
-              Management
-            </h2>
-          </div>
-
           <nav className="flex flex-col gap-1.5 px-2">
-            <NavItem to="/customers" end={true} icon={<MdPeople />} label="Customers" onClick={onClose} styles={{ linkBase, getLinkStyles }} />
-            <NavItem to="/customers/add" icon={<MdAdd />} label="Add Customer" onClick={onClose} styles={{ linkBase, getLinkStyles }} />
-            <NavItem to="/customers/trash" icon={<MdDelete />} label="Trash" onClick={onClose} styles={{ linkBase, getLinkStyles }} />
-
-            {/* Divider */}
-            <div className="my-4 mx-4 border-t border-slate-200" />
-
-            <div className="px-4 mb-4">
-              <h2 className="text-[11px] font-bold uppercase tracking-[0.15em] text-slate-400">
-                Security
+            {/* Primary Management Group */}
+            <div className="px-4 mt-2 mb-2">
+              <h2 className="text-[10px] font-black uppercase tracking-[0.2em] text-slate-400">
+                Management
               </h2>
             </div>
 
-            <NavItem to="/change-password" icon={<MdLock />} label="Change Password" onClick={onClose} styles={{ linkBase, getLinkStyles }} />
+            <NavItem to="/customers" end={true} icon={<MdPeople />} label="Customers" onClick={onClose} styles={{ linkBase, getLinkStyles }} />
+            <NavItem to="/customers/add" icon={<MdAdd />} label="Add Customer" onClick={onClose} styles={{ linkBase, getLinkStyles }} />
+            <NavItem to="/customers/trash" icon={<MdDelete />} label="Recycle Bin" onClick={onClose} styles={{ linkBase, getLinkStyles }} />
+
+            {/* Divider */}
+            <div className="my-4 mx-4 border-t border-slate-100" />
+
+            {/* Security Group */}
+            <div className="px-4 mb-2">
+              <h2 className="text-[10px] font-black uppercase tracking-[0.2em] text-slate-400">
+                Security Sync
+              </h2>
+            </div>
+
+            {/* 🔹 These match your root routes in App.jsx */}
+            <NavItem to="/change-password" icon={<MdLock />} label="Update Password" onClick={onClose} styles={{ linkBase, getLinkStyles }} />
+            <NavItem to="/change-email" icon={<MdEmail />} label="Update Email" onClick={onClose} styles={{ linkBase, getLinkStyles }} />
           </nav>
 
           {/* Bottom Footer: Senior touch for versioning or support */}

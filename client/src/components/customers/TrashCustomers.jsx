@@ -247,7 +247,7 @@ export default function TrashCustomers() {
             >
               <MdDeleteForever size={20} /> Burn
             </button>
-            <button onClick={unselectAll} className="text-slate-400 hover:text-white transition-colors">
+            <button onClick={unselectAll} className="text-slate-400 hover:text-white transition-colors cursor-pointer">
               <MdOutlineClose size={22} />
             </button>
           </div>
