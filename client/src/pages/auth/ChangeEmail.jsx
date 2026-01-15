@@ -226,11 +226,11 @@ export default function ChangeEmail() {
               {step === 2 ? (
                 <button
                   type="button"
-                  disabled={resendTimer > 0 || loading || resendCount >= 3}
+                  disabled={loading || resendTimer > 0 || resendCount >= 3}
                   onClick={handleResend}
                   className={`
                               flex items-center gap-2 px-4 py-2 rounded-lg text-[10px] font-black uppercase tracking-widest transition-all duration-200
-                                ${resendTimer > 0 || resendCount >= 3
+                                ${resendTimer > 0 || resendCount >= 3 || loading
                       ? "bg-slate-00 text-slate-600 cursor-not-allowed opacity-70"
                       : "bg-indigo-50 text-indigo-600 hover:bg-indigo-600 hover:text-white hover:shadow-md active:scale-95 cursor-pointer"}
                         `}
