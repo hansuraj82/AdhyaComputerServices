@@ -115,9 +115,9 @@ export default function GSTVault() {
               </tr>
             </thead>
             <tbody className="divide-y divide-slate-50">
-              {loading ? (
+              {loading == true ? (
                 <tr>
-                  <td colSpan="3" className="p-20 text-center">
+                  <td colSpan="4" className="p-20 text-center">
                     <div className="flex flex-col items-center gap-2 text-slate-400 font-bold">
                       <div className="w-8 h-8 border-4 border-indigo-600 border-t-transparent rounded-full animate-spin mb-2" />
                       Accessing GST Records...
