@@ -126,7 +126,7 @@ export default function GSTVault() {
                 </tr>
               ) : gstRecords.length === 0 ? (
                 <tr>
-                  <td colSpan="3" className="p-20 text-center text-slate-400 font-bold uppercase tracking-widest text-xs">
+                  <td colSpan="4" className="p-20 text-center text-slate-400 font-bold uppercase tracking-widest text-xs">
                     No Matching GST Numbers Found
                   </td>
                 </tr>
