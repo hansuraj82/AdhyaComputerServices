@@ -8,7 +8,7 @@ import { CiEdit } from "react-icons/ci";
 import {
   MdVerified,
   MdArrowBack,
-  MdOutlineShield,
+  MdOutlinePersonSearch,
   MdRefresh
 } from "react-icons/md";
 
@@ -44,7 +44,7 @@ export default function CustomerDetails() {
       setIsNotFound(true);
       toast.error(err.message || "Failed to sync customer profile");
     } finally {
-      setTimeout(() => setPageLoading(false), 600);
+      setTimeout(() => setPageLoading(true), 600);
     }
   }, [id]);
 
@@ -78,7 +78,7 @@ export default function CustomerDetails() {
 
           <button
             onClick={() => navigate(`/customers/edit/${id}`)}
-            className="w-full sm:w-auto flex items-center justify-center gap-2 px-5 py-2.5 bg-slate-900 text-white rounded-xl text-xs font-black uppercase tracking-widest shadow-lg active:scale-95"
+            className="w-full sm:w-auto flex items-center justify-center gap-2 px-5 py-2.5 bg-slate-900 text-white rounded-xl text-xs font-black uppercase tracking-widest shadow-lg active:scale-95 cursor-pointer"
           >
             <CiEdit size={18} /> Edit Profile
           </button>
@@ -156,40 +156,35 @@ export default function CustomerDetails() {
 }
 
 const GlobalLoader = ({ primaryBrand = "#4f46e5" }) => (
-  <div className="fixed inset-0 z-[9999] bg-white/80 backdrop-blur-sm flex items-center justify-center overflow-hidden">
-    {/* 1. Main Centered Container */}
+<div className="flex flex-col items-center justify-center py-50 sm:py-50">
+    
     <div className="relative flex flex-col items-center justify-center p-8 text-center">
       
-      {/* 2. Visual Layering (The "Smart" Pulse) */}
-      <div className="relative flex items-center justify-center w-24 h-24">
-        {/* Background Ripple Effect */}
+      {/* Visual Layering */}
+      <div className="relative flex items-center justify-center w-20 h-20">
         <div 
           className="absolute inset-0 rounded-full animate-ping opacity-10"
           style={{ backgroundColor: primaryBrand }}
         />
         
-        {/* Secondary Glow Layer */}
-        <div 
-          className="absolute w-16 h-16 rounded-full blur-2xl opacity-20 animate-pulse"
-          style={{ backgroundColor: primaryBrand }}
-        />
-
-        {/* The Primary Shield Icon */}
-        <div className="relative z-10 transition-transform duration-500 scale-110">
-          <MdOutlineShield 
-            size={56} 
+        <div className="relative z-10 transition-transform duration-500">
+          {/* User Icon instead of Shield for Customer context */}
+          <MdOutlinePersonSearch 
+            size={48} 
             style={{ color: primaryBrand }} 
             className="animate-pulse drop-shadow-sm" 
           />
         </div>
       </div>
 
-      {/* 3. Professional Status Feedback */}
-      <div className="mt-6 flex flex-col items-center gap-2">
-        <span className="text-[10px] font-black uppercase tracking-[0.3em] text-slate-400 animate-pulse">
-          Secure Authorization
+      {/* Professional Status Feedback */}
+      <div className="mt-4 flex flex-col items-center gap-2">
+        <span className="text-[9px] font-black uppercase tracking-[0.2em] text-slate-500">
+          Syncing Customer Profile
         </span>
-        <div className="h-[2px] w-12 bg-slate-100 rounded-full overflow-hidden">
+        
+        {/* Modern thin loader line */}
+        <div className="h-[1.5px] w-10 bg-slate-100 rounded-full overflow-hidden">
           <div 
             className="h-full animate-[loading_1.5s_infinite_ease-in-out]" 
             style={{ backgroundColor: primaryBrand, width: '40%' }}
@@ -198,7 +193,6 @@ const GlobalLoader = ({ primaryBrand = "#4f46e5" }) => (
       </div>
     </div>
 
-    {/* Custom Animation for the Progress Line */}
     <style dangerouslySetInnerHTML={{ __html: `
       @keyframes loading {
         0% { transform: translateX(-100%); }
