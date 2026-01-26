@@ -5,7 +5,7 @@ import { forgotPasswordLimiter } from "../middleware/rateLimiter.js";
 
 const router = express.Router();
 router.post("/login", loginOwner);
-router.get("/getOwner", protect, getOwnerEmail);
+router.get("/getOwner", getOwnerEmail);
 router.post("/change-password", protect, changePassword);
 router.post("/forgot-password", forgotPasswordLimiter, forgotPassword);
 router.post("/reset-password", resetPassword);

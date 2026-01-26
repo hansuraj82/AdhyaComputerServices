@@ -1,6 +1,7 @@
 import Customer from "../models/customer.model.js";
 import cloudinary from "../config/cloudinary.js"
 import asyncHandler from "../utils/asyncHandler.js";
+import { cascadeDeleteCustomerServices } from "../utils/cascadeDeleteCustomer.js";
 
 /* CREATE */
 export const addCustomer = asyncHandler(async (req, res) => {
@@ -24,6 +25,7 @@ export const getCustomers = asyncHandler(async (req, res) => {
 
   const [customers, total] = await Promise.all([
     Customer.find(filter)
+      .select("-documents")
       .sort({ createdAt: -1 })
       .skip(skip)
       .limit(limit),
@@ -52,6 +54,7 @@ export const getTrashCustomers = asyncHandler(async (req, res) => {
   const [customers, total] = await Promise.all([
     Customer.find(filter)
       .sort({ createdAt: -1 })
+      .select("-documents")
       .skip(skip)
       .limit(limit),
     Customer.countDocuments(filter)
@@ -203,7 +206,7 @@ export const permanentDeleteCustomer = asyncHandler(async (req, res) => {
         resource_type: doc.resourceType
       });
   }
-
+  await cascadeDeleteCustomerServices(customer._id);
   await customer.deleteOne();
   res.json({ message: "Customer permanently deleted" });
 });
@@ -228,6 +231,7 @@ export const bulkPermanentDelete = asyncHandler(async (req, res) => {
           });
       }
     }
+    await cascadeDeleteCustomerServices(customer._id);
   }
 
   const result = await Customer.deleteMany({ _id: { $in: ids } });
