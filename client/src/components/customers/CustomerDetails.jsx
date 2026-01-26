@@ -9,6 +9,7 @@ import {
   MdVerified,
   MdArrowBack,
   MdOutlineShield,
+  MdRefresh
 } from "react-icons/md";
 
 const CustomerDocuments = lazy(() => import("./CustomerDocuments"));
@@ -154,15 +155,63 @@ export default function CustomerDetails() {
   );
 }
 
-const GlobalLoader = ({ primaryBrand }) => (
-  <div className="fixed inset-0 bg-white flex items-center justify-center">
-    <MdOutlineShield size={48} style={{ color: primaryBrand }} className="animate-pulse opacity-30" />
+const GlobalLoader = ({ primaryBrand = "#4f46e5" }) => (
+  <div className="fixed inset-0 z-[9999] bg-white/80 backdrop-blur-sm flex items-center justify-center overflow-hidden">
+    {/* 1. Main Centered Container */}
+    <div className="relative flex flex-col items-center justify-center p-8 text-center">
+      
+      {/* 2. Visual Layering (The "Smart" Pulse) */}
+      <div className="relative flex items-center justify-center w-24 h-24">
+        {/* Background Ripple Effect */}
+        <div 
+          className="absolute inset-0 rounded-full animate-ping opacity-10"
+          style={{ backgroundColor: primaryBrand }}
+        />
+        
+        {/* Secondary Glow Layer */}
+        <div 
+          className="absolute w-16 h-16 rounded-full blur-2xl opacity-20 animate-pulse"
+          style={{ backgroundColor: primaryBrand }}
+        />
+
+        {/* The Primary Shield Icon */}
+        <div className="relative z-10 transition-transform duration-500 scale-110">
+          <MdOutlineShield 
+            size={56} 
+            style={{ color: primaryBrand }} 
+            className="animate-pulse drop-shadow-sm" 
+          />
+        </div>
+      </div>
+
+      {/* 3. Professional Status Feedback */}
+      <div className="mt-6 flex flex-col items-center gap-2">
+        <span className="text-[10px] font-black uppercase tracking-[0.3em] text-slate-400 animate-pulse">
+          Secure Authorization
+        </span>
+        <div className="h-[2px] w-12 bg-slate-100 rounded-full overflow-hidden">
+          <div 
+            className="h-full animate-[loading_1.5s_infinite_ease-in-out]" 
+            style={{ backgroundColor: primaryBrand, width: '40%' }}
+          />
+        </div>
+      </div>
+    </div>
+
+    {/* Custom Animation for the Progress Line */}
+    <style dangerouslySetInnerHTML={{ __html: `
+      @keyframes loading {
+        0% { transform: translateX(-100%); }
+        100% { transform: translateX(250%); }
+      }
+    `}} />
   </div>
 );
 
 const TabLoader = () => (
-  <div className="flex items-center justify-center py-20">
-    <div className="w-10 h-10 border-4 border-slate-100 border-t-indigo-500 rounded-full animate-spin" />
+<div className="flex flex-col items-center justify-center py-32">
+    <MdRefresh style={{ color: "oklch(0.511 0.262 276.966)" }} size={32} className="animate-spin mb-4 opacity-50" />
+    <span className="text-sm font-bold text-slate-300 uppercase tracking-widest">Loading Module...</span>
   </div>
 );
 
