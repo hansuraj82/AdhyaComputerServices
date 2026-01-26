@@ -29,12 +29,7 @@ export default function CustomerDocuments({ customerId }) {
     try {
       setIsProcessing(true);
       const res = await getCustomerById(customerId);
-      console.log('before', customer);
-
       setCustomer(res.data);
-      console.log(customer, 'after');
-
-
     } catch (err) {
       toast.error(err.message || "something went wrong")
     } finally {
