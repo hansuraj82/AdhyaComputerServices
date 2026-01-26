@@ -44,7 +44,7 @@ export default function CustomerDetails() {
       setIsNotFound(true);
       toast.error(err.message || "Failed to sync customer profile");
     } finally {
-      setTimeout(() => setPageLoading(true), 600);
+      setTimeout(() => setPageLoading(false), 600);
     }
   }, [id]);
 
