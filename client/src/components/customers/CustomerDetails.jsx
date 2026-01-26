@@ -204,7 +204,7 @@ const GlobalLoader = ({ primaryBrand = "#4f46e5" }) => (
 
 const TabLoader = () => (
 <div className="flex flex-col items-center justify-center py-32">
-    <MdRefresh style={{ color: "oklch(0.511 0.262 276.966)" }} size={32} className="animate-spin mb-4 opacity-50" />
+    <MdRefresh style={{ color: "oklch(0.511 0.262 276.966)" }} size={32} className="animate-spin mb-4 opacity-80" />
     <span className="text-sm font-bold text-slate-300 uppercase tracking-widest">Loading Module...</span>
   </div>
 );

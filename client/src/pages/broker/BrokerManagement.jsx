@@ -170,10 +170,13 @@ const WorkDetailView = ({ data, filters, setFilters, loading, navigate }) => (
     {/* Records Table */}
     <div className="overflow-hidden">
       {loading ? (
-        <div className="py-10 text-center animate-pulse text-slate-400">Fetching records...</div>
+        <div className="flex flex-col items-center gap-2 text-slate-400 font-bold">
+          <div className="w-8 h-8 border-4 border-emerald-600 border-t-transparent rounded-full animate-spin mb-2" />
+          Fecthing Records...
+        </div>
       ) : data.records.length === 0 ? (
         <div className="py-10 text-center text-slate-400 bg-slate-50 rounded-2xl border border-dashed">
-          No {filters.type} records found for this period.
+          No {filters.type} records found.
         </div>
       ) : (
         <div className="space-y-3">
