@@ -1,26 +1,32 @@
 import { NavLink } from "react-router-dom";
-import { MdPeople, MdDelete, MdAdd, MdLock, MdEmail } from "react-icons/md";
+import {
+  MdPeople,
+  MdDeleteOutline,
+  MdPersonAddAlt,
+  MdLockOutline,
+  MdOutlineMail,
+  MdOutlineReceiptLong,
+  MdOutlinePolicy,
+  MdOutlineAnalytics,
+  MdOutlineSupportAgent
+} from "react-icons/md";
 
 export default function Sidebar({ isOpen, onClose }) {
-  // 1. Structure: Use a light-gray bg to contrast against the white content/navbar
   const base =
     "fixed inset-y-0 left-0 z-40 w-64 bg-slate-50 border-r border-slate-200 " +
     "transition-transform duration-300 ease-in-out md:static md:translate-x-0 pt-16 md:pt-6";
 
-  // 2. Navigation Item Styling
   const linkBase =
-    "group flex items-center gap-3 px-4 py-2.5 mx-2 rounded-lg text-sm font-medium " +
+    "group flex items-center gap-3 px-4 py-2.5 mx-3 rounded-xl text-[13px] font-bold " +
     "transition-all duration-200 ease-in-out antialiased ";
 
-  // 3. Active vs Inactive state logic
   const getLinkStyles = (isActive) =>
     isActive
-      ? "bg-indigo-600 text-white shadow-md shadow-indigo-200 ring-1 ring-indigo-700/10"
-      : "text-slate-600 hover:bg-slate-200/60 hover:text-slate-900";
+      ? "bg-indigo-600 text-white shadow-lg shadow-indigo-200 ring-1 ring-indigo-700/10"
+      : "text-slate-500 hover:bg-white hover:text-indigo-600 hover:shadow-sm";
 
   return (
     <>
-      {/* Overlay - Smoother fade on mobile */}
       {isOpen && (
         <div
           onClick={onClose}
@@ -31,38 +37,43 @@ export default function Sidebar({ isOpen, onClose }) {
       <aside className={`${base} ${isOpen ? "translate-x-0" : "-translate-x-full"}`}>
         <div className="flex flex-col h-full">
 
-          <nav className="flex flex-col gap-1.5 px-2">
-            {/* Primary Management Group */}
-            <div className="px-4 mt-2 mb-2">
-              <h2 className="text-[10px] font-black uppercase tracking-[0.2em] text-slate-400">
-                Management
-              </h2>
-            </div>
+          <nav className="flex flex-col gap-1 overflow-y-auto no-scrollbar pb-6">
 
-            <NavItem to="/customers" end={true} icon={<MdPeople />} label="Customers" onClick={onClose} styles={{ linkBase, getLinkStyles }} />
-            <NavItem to="/customers/add" icon={<MdAdd />} label="Add Customer" onClick={onClose} styles={{ linkBase, getLinkStyles }} />
-            <NavItem to="/customers/trash" icon={<MdDelete />} label="Recycle Bin" onClick={onClose} styles={{ linkBase, getLinkStyles }} />
+            {/* GROUP 1: CORE OPERATIONS */}
+            <SidebarGroup label="Management">
+              <NavItem to="/customers" end={true} icon={<MdPeople />} label="All Customers" onClick={onClose} styles={{ linkBase, getLinkStyles }} />
+              <NavItem to="/customers/add" icon={<MdPersonAddAlt />} label="New Registration" onClick={onClose} styles={{ linkBase, getLinkStyles }} />
+              <NavItem to="/agent" icon={<MdOutlineSupportAgent />} label="Agent Network" onClick={onClose} styles={{ linkBase, getLinkStyles }} />
+            </SidebarGroup>
 
-            {/* Divider */}
-            <div className="my-4 mx-4 border-t border-slate-100" />
+            <div className="mx-6 my-2 border-t border-slate-200/50" />
 
-            {/* Security Group */}
-            <div className="px-4 mb-2">
-              <h2 className="text-[10px] font-black uppercase tracking-[0.2em] text-slate-400">
-                Security Sync
-              </h2>
-            </div>
+            {/* GROUP 2: FINANCIAL SERVICES */}
+            <SidebarGroup label="Service Desk">
+              <NavItem to="/policy" icon={<MdOutlinePolicy />} label="Insurance Policy" onClick={onClose} styles={{ linkBase, getLinkStyles }} />
+              <NavItem to="/gst" icon={<MdOutlineReceiptLong />} label="GST Compliance" onClick={onClose} styles={{ linkBase, getLinkStyles }} />
+              <NavItem to="/itr" icon={<MdOutlineAnalytics />} label="ITR Filing" onClick={onClose} styles={{ linkBase, getLinkStyles }} />
+            </SidebarGroup>
 
-            {/* 🔹 These match your root routes in App.jsx */}
-            <NavItem to="/change-password" icon={<MdLock />} label="Update Password" onClick={onClose} styles={{ linkBase, getLinkStyles }} />
-            <NavItem to="/change-email" icon={<MdEmail />} label="Update Email" onClick={onClose} styles={{ linkBase, getLinkStyles }} />
+            <div className="mx-6 my-2 border-t border-slate-200/50" />
+
+            {/* GROUP 3: SYSTEM & SECURITY */}
+            <SidebarGroup label="Settings & Security">
+              <NavItem to="/change-password" icon={<MdLockOutline />} label="Update Password" onClick={onClose} styles={{ linkBase, getLinkStyles }} />
+              <NavItem to="/change-email" icon={<MdOutlineMail />} label="Email Update" onClick={onClose} styles={{ linkBase, getLinkStyles }} />
+              <NavItem to="/customers/trash" icon={<MdDeleteOutline />} label="Recycle Bin" onClick={onClose} styles={{ linkBase, getLinkStyles }} />
+            </SidebarGroup>
+
           </nav>
 
-          {/* Bottom Footer: Senior touch for versioning or support */}
-          <div className="mt-auto p-6 border-t border-slate-200 bg-slate-100/50">
-            <p className="text-[10px] text-slate-400 font-semibold tracking-wider uppercase text-center">
-              v1.0.0 • Adhya Computer
-            </p>
+          {/* Footer Branding */}
+          <div className="mt-auto p-4 mx-3 mb-4 rounded-2xl bg-indigo-50/50 border border-indigo-100/50">
+            <div className="flex items-center justify-center gap-2">
+              <div className="w-1.5 h-1.5 rounded-full bg-indigo-400 animate-pulse" />
+              <p className="text-[10px] text-indigo-900 font-black tracking-widest uppercase">
+                Adhya v1.0.0
+              </p>
+            </div>
           </div>
         </div>
       </aside>
@@ -70,17 +81,30 @@ export default function Sidebar({ isOpen, onClose }) {
   );
 }
 
-// Sub-component for cleaner mapping
+// Helper Components for a "Senior" cleaner code structure
+function SidebarGroup({ label, children }) {
+  return (
+    <div className="mt-4">
+      <h2 className="px-7 mb-2 text-[10px] font-black uppercase tracking-[0.2em] text-slate-400">
+        {label}
+      </h2>
+      <div className="flex flex-col gap-1">{children}</div>
+    </div>
+  );
+}
+
 function NavItem({ to, icon, label, onClick, styles, end }) {
   return (
     <NavLink
       to={to}
-      end={end} // 👈 Add this line!
+      end={end}
       onClick={onClick}
       className={({ isActive }) => `${styles.linkBase} ${styles.getLinkStyles(isActive)}`}
     >
-      <span className="text-xl opacity-80 group-hover:scale-110 transition-transform">{icon}</span>
-      <span>{label}</span>
+      <span className="text-xl transition-transform duration-300 group-hover:scale-110">
+        {icon}
+      </span>
+      <span className="tracking-tight">{label}</span>
     </NavLink>
   );
 }

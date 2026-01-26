@@ -1,4 +1,5 @@
 import { useEffect, useRef } from "react";
+import { createPortal } from "react-dom"; // 🔹 Added for Portal
 import { MdOutlineReportProblem, MdDeleteForever, MdOutlineClose } from "react-icons/md";
 
 export default function ConfirmModal({ open, onClose, onConfirm, loading, message, trash = false }) {
@@ -9,25 +10,26 @@ export default function ConfirmModal({ open, onClose, onConfirm, loading, messag
     if (!open) return;
 
     const modalElement = modalRef.current;
+    if (!modalElement) return;
+
     const focusableElements = modalElement.querySelectorAll(
       'button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])'
     );
     const firstElement = focusableElements[0];
     const lastElement = focusableElements[focusableElements.length - 1];
 
-    // Default focus to the "Cancel" button for safety (prevents accidental deletes)
     setTimeout(() => firstElement?.focus(), 50);
 
     const handleKeyDown = (e) => {
       if (e.key === "Escape" && !loading) onClose();
 
       if (e.key === "Tab") {
-        if (e.shiftKey) { // Shift + Tab
+        if (e.shiftKey) {
           if (document.activeElement === firstElement) {
             e.preventDefault();
             lastElement.focus();
           }
-        } else { // Tab
+        } else {
           if (document.activeElement === lastElement) {
             e.preventDefault();
             firstElement.focus();
@@ -36,8 +38,14 @@ export default function ConfirmModal({ open, onClose, onConfirm, loading, messag
       }
     };
 
+    // 🔹 Prevent background scrolling when modal is open
+    document.body.style.overflow = "hidden";
+
     window.addEventListener("keydown", handleKeyDown);
-    return () => window.removeEventListener("keydown", handleKeyDown);
+    return () => {
+      window.removeEventListener("keydown", handleKeyDown);
+      document.body.style.overflow = "unset"; // 🔹 Restore scrolling
+    };
   }, [open, onClose, loading]);
 
   if (!open) return null;
@@ -46,9 +54,10 @@ export default function ConfirmModal({ open, onClose, onConfirm, loading, messag
     if (!loading) onClose();
   };
 
-  return (
+  // 🔹 Wrap in createPortal to ensure it renders at the root of the document
+  return createPortal(
     <div
-      className="fixed inset-0 bg-slate-900/80 backdrop-blur-sm z-[100] flex items-center justify-center p-4 transition-all"
+      className="fixed inset-0 bg-slate-900/80 backdrop-blur-sm z-[9999] flex items-center justify-center p-4 transition-all"
       onClick={handleBackdropClick}
     >
       <div
@@ -56,7 +65,7 @@ export default function ConfirmModal({ open, onClose, onConfirm, loading, messag
         className="bg-white rounded-[2.5rem] w-full max-w-md shadow-[0_30px_60px_-15px_rgba(220,38,38,0.3)] overflow-hidden border border-red-100 transform transition-all animate-in zoom-in-95 duration-200"
         onClick={(e) => e.stopPropagation()}
       >
-        {/* 🔹 Danger Header */}
+        {/* Danger Header */}
         <div className="bg-rose-50 p-8 flex flex-col items-center text-center relative">
           <button
             onClick={onClose}
@@ -96,7 +105,7 @@ export default function ConfirmModal({ open, onClose, onConfirm, loading, messag
                 <div className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin" />
               ) : (
                 <>
-                  <MdDeleteForever className="text-lg group-hover:shake" />
+                  <MdDeleteForever className="text-lg group-hover:animate-bounce" />
                   Confirm Deletion
                 </>
               )}
@@ -119,6 +128,7 @@ export default function ConfirmModal({ open, onClose, onConfirm, loading, messag
           </p>
         </div>
       </div>
-    </div>
+    </div>,
+    document.body // 🔹 Renders the modal directly into the body
   );
 }
