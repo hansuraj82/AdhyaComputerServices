@@ -13,7 +13,7 @@ import {
 
 const CustomerDocuments = lazy(() => import("./CustomerDocuments"));
 const CustomerPolicies = lazy(() => import("./CustomerPolicies"));
-const CustomerGST = lazy(() => import("./CustomerGst"));
+const CustomerGST = lazy(() => import("./CustomerGST"));
 const CustomerITR = lazy(() => import("./CustomerITR"));
 
 const TABS = [
