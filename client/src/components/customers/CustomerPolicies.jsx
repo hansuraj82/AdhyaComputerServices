@@ -84,8 +84,8 @@ export default function CustomerPolicies({ customerId }) {
       ]);
       setPolicies(policyRes.data);
       setBrokers(brokerRes.data);
-    } catch {
-      toast.error("Failed to load data");
+    } catch(err) {
+      toast.error(err.response?.data?.message ||"Failed to load data");
     } finally {
       setLoading(false);
     }
@@ -98,7 +98,6 @@ export default function CustomerPolicies({ customerId }) {
   const handleAddPolicy = async () => {
     const { policyNumber, policyStartDate, policyEndDate } = newPolicy;
     if (!validate()) {
-      toast.error("Please correct the highlighted errors");
       return;
     }
 
@@ -110,8 +109,8 @@ export default function CustomerPolicies({ customerId }) {
       setNewPolicy({ policyNumber: "", policyStartDate: "", policyEndDate: "", brokerId: "" });
       setShowAddForm(false);
       fetchAll();
-    } catch {
-      toast.error("Failed to add policy");
+    } catch (err) {
+      toast.error(err.response?.data?.message ||"Failed to add policy");
     } finally {
       setAdding(false);
     }

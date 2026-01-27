@@ -6,6 +6,7 @@ import toast from "react-hot-toast";
 import Pagination from "../../components/customers/Pagination";
 
 export default function GSTVault() {
+  document.title = `GSTIN | Adhya Computer`;
   const navigate = useNavigate();
   const [gstRecords, setGstRecords] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -127,7 +128,7 @@ export default function GSTVault() {
               ) : gstRecords.length === 0 ? (
                 <tr>
                   <td colSpan="4" className="p-20 text-center text-slate-400 font-bold uppercase tracking-widest text-xs">
-                    No Matching GST Numbers Found
+                    No GST Numbers Found
                   </td>
                 </tr>
               ) : (

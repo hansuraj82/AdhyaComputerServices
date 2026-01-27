@@ -51,7 +51,6 @@ export default function EditCustomer() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     if (!validate()) {
-        toast.error("Please correct the highlighted errors");
         return;
     }
     setLoading(true);

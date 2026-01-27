@@ -44,7 +44,7 @@ export default function TrashCustomers() {
       setCustomers(res?.data?.customers);
       setTotalPages(res?.data?.pagination?.totalPages);
 
-    } catch (error) {
+    } catch (err) {
       const message = err?.response?.data?.message || err?.message || "Server not reachable";
       toast.error(message);
     } finally {

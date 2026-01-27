@@ -34,6 +34,8 @@ export default function CustomerDetails() {
   const [activeTab, setActiveTab] = useState("documents");
   const [isNotFound, setIsNotFound] = useState(false);
 
+   document.title = customer ? `${customer.name} | Details` : `Customer Details | Adhya Computer`;
+
   const fetchCustomer = useCallback(async () => {
     try {
       setPageLoading(true);
@@ -42,7 +44,7 @@ export default function CustomerDetails() {
       setCustomer(res.data);
     } catch (err) {
       setIsNotFound(true);
-      toast.error(err.message || "Failed to sync customer profile");
+      toast.error(err.response?.data?.message || "Failed to sync customer profile");
     } finally {
       setTimeout(() => setPageLoading(false), 600);
     }

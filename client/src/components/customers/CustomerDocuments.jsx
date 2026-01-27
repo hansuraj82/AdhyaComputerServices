@@ -31,7 +31,7 @@ export default function CustomerDocuments({ customerId }) {
       const res = await getCustomerById(customerId);
       setCustomer(res.data);
     } catch (err) {
-      toast.error(err.message || "something went wrong")
+      toast.error(err.response?.data?.message || "something went wrong")
     } finally {
       setTimeout(() => setIsProcessing(false), 80);
     }
@@ -60,8 +60,8 @@ export default function CustomerDocuments({ customerId }) {
       setDocLabel("");
       toast.success("Document added successfully");
       fetchCustomer();
-    } catch {
-      toast.error("Upload failed");
+    } catch (err){
+      toast.error(err.response?.data?.message || "Upload failed");
     } finally {
       setUploading(false);
     }
@@ -89,7 +89,11 @@ export default function CustomerDocuments({ customerId }) {
       fetchCustomer();
       toast.success("Document deleted");
 
-    } finally {
+    }catch (err) {
+      toast.error(err.response?.data?.message || "something went wrong")
+    }
+    
+    finally {
       setDeletingId(null);
     }
   };

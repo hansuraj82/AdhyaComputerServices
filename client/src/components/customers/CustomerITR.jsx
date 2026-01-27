@@ -85,8 +85,8 @@ export default function CustomerITR({ customerId }) {
       ]);
       setItrs(itrRes.data);
       setBrokers(brokerRes.data);
-    } catch {
-      toast.error("Failed to load ITR records");
+    } catch (err) {
+      toast.error(err.response?.data?.message || "Failed to load ITR records");
     } finally {
       setLoading(false);
     }

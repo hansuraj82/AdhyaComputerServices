@@ -78,7 +78,7 @@ export default function CustomerGST({ customerId }) {
       setGstRecords(gstRes.data);
       setBrokers(brokerRes.data);
     } catch (err) {
-      toast.error("Failed to sync GST data");
+      toast.error(err.response?.data?.message ||"Failed to sync GST data");
     } finally {
       setLoading(false);
     }

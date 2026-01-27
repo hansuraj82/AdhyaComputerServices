@@ -7,6 +7,7 @@ import { getAllPolicies } from "../../services/policy.service";
 import Pagination from "../../components/customers/Pagination";
 
 export default function PolicyVault() {
+    document.title = `Policy | Adhya Computer`;
     const [policies, setPolicies] = useState([]);
     const [pagination, setPagination] = useState({ page: 1, totalPages: 1 });
     const [loading, setLoading] = useState(true);
@@ -132,7 +133,7 @@ export default function PolicyVault() {
                                 <tr>
                                     <td colSpan="4" className="p-20 text-center">
                                         <div className="flex flex-col items-center gap-2 text-slate-400 font-bold">
-                                            <div className="w-8 h-8 border-4 border-emerald-600 border-t-transparent rounded-full animate-spin mb-2" />
+                                            <div className="w-8 h-8 border-4 border-indigo-600 border-t-transparent rounded-full animate-spin mb-2" />
                                             Loading Policies...
                                         </div>
                                     </td>

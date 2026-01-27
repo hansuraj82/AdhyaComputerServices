@@ -24,6 +24,7 @@ import {
 import { useNavigate } from "react-router-dom";
 
 export default function BrokerManagement() {
+  document.title = `Agents | Adhya Computer`;
   const [brokers, setBrokers] = useState([]);
   const [loading, setLoading] = useState(true);
   const [view, setView] = useState("list"); // "list" | "summary" | "work"

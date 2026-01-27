@@ -6,6 +6,7 @@ import toast from "react-hot-toast";
 import Pagination from "../../components/customers/Pagination";
 
 export default function ITRVault() {
+  document.title = `ITR | Adhya Computer`;
   const navigate = useNavigate();
   const [itrRecords, setItrRecords] = useState([]);
   const [loading, setLoading] = useState(true);

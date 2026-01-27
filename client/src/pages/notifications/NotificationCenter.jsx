@@ -11,6 +11,7 @@ import {
 import { useNotifications } from "../../components/context/NotificationContext";
 
 export default function NotificationCenter() {
+  document.title = `Notifications | Adhya Computer`;
   const [notifications, setNotifications] = useState([]);
   const [loading, setLoading] = useState(true);
   const [activeTab, setActiveTab] = useState("urgent");
