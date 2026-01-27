@@ -91,7 +91,7 @@ export default function ConfirmModal({ open, onClose, onConfirm, loading, messag
           <p className="text-sm font-medium text-slate-600 text-center leading-relaxed">
             {message || "Are you sure you want to proceed with this deletion?"}
             <span className="block mt-2 text-rose-600 font-bold italic">
-              {trash ? "This record will be moved to Trash. You can restore it later." : "This process is permanent and cannot be reversed."}
+              {trash ? "This record will be moved to Recycle Bin. You can restore it later." : "This process is permanent and cannot be reversed."}
             </span>
           </p>
 

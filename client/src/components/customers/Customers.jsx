@@ -223,7 +223,7 @@ export default function Customers() {
                 onClose={() => setBulkTrashId(null)}
                 onConfirm={handleBulkTrash}
                 title="Bulk Delete"
-                message={`Are you sure you want to move ${selectedIds.length} customers to trash? This action can be undone from the Trash tab.`}
+                message={`Are you sure you want to move ${selectedIds.length} customers to Recycle Bin? This action can be undone from the Recycle Bin tab.`}
                 trash={true}
                 variant="danger"
             />
@@ -234,7 +234,7 @@ export default function Customers() {
                 onClose={() => setTrashId(null)}
                 onConfirm={handleTrash}
                 title="Delete Customer"
-                message="Moving this customer to trash will restrict their access immediately."
+                message="Moving this customer to Recycle Bin will restrict their access immediately."
                 trash={true}
                 variant="danger"
             />

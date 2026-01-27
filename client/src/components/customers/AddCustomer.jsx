@@ -22,6 +22,7 @@ export default function AddCustomer() {
     const errs = {};
     if (!form.name.trim()) errs.name = "Legal name is required";
     if (!/^\d{10}$/.test(form.mobile)) errs.mobile = "Valid 10-digit mobile required";
+    if(!form.aadhar) errs.aadhar = "Aadhar is Required"
     if (form.aadhar && !/^\d{12}$/.test(form.aadhar)) errs.aadhar = "Aadhar must be exactly 12 digits";
     setErrors(errs);
     return Object.keys(errs).length === 0;
