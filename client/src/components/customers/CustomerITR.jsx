@@ -27,7 +27,8 @@ import {
   MdAdd,
   MdRefresh,
   MdOutlineRemoveRedEye,
-  MdOutlineDescription
+  MdOutlineDescription,
+  MdInfoOutline
 } from "react-icons/md";
 
 export default function CustomerITR({ customerId }) {
@@ -328,6 +329,35 @@ const ITRCard = ({ itr, brokers, onRefresh }) => {
     }
   };
 
+    const handleDownload = async (url, filename) => {
+    try {
+      // 1. Fetch the data from the URL
+      const response = await fetch(url);
+
+      // 2. Convert it into a blob (binary data)
+      const blob = await response.blob();
+
+      // 3. Create a local URL for that blob
+      const blobUrl = window.URL.createObjectURL(blob);
+
+      // 4. Create the hidden link and trigger download
+      const link = document.createElement("a");
+      link.href = blobUrl;
+      link.download = filename; // This now works because the URL is local
+
+      document.body.appendChild(link);
+      link.click();
+
+      // 5. Cleanup: remove link and revoke the blob URL to save memory
+      document.body.removeChild(link);
+      window.URL.revokeObjectURL(blobUrl);
+    } catch (error) {
+      console.error("Download failed:", error);
+      // Fallback: Open in new tab if fetch fails (e.g., CORS issues)
+      window.open(url, "_blank");
+    }
+  }
+
   return (
     <>
       <ConfirmModal
@@ -601,11 +631,41 @@ const ITRCard = ({ itr, brokers, onRefresh }) => {
                     )}
                   </div>
 
-                  {/* 2. Info Section - Truncated to prevent push-out */}
-                  <div className="py-3 px-1">
-                    <p className="text-[13px] font-bold text-slate-800 truncate">
-                      {doc.label}
-                    </p>
+                  <div className="py-3 px-1 relative group/label max-w-full">
+                    {/* 1. The Pro Tooltip Container */}
+                    <div className="
+                        absolute bottom-full left-0 mb-3 
+                        opacity-0 group-hover/label:opacity-100 
+                        translate-y-2 group-hover/label:translate-y-0
+                        pointer-events-none transition-all duration-300 ease-out 
+                        z-50"
+                    >
+                      {/* Tooltip Bubble */}
+                      <div className="
+                          bg-slate-900/95 backdrop-blur-md text-white 
+                          text-[11px] font-medium px-3 py-1.5 
+                          rounded-lg shadow-2xl border border-white/10
+                          whitespace-nowrap flex items-center gap-2"
+                      >
+                        <MdInfoOutline size={14} className="text-indigo-400" />
+                        {doc.label}
+
+                        {/* Decorative Pointer/Arrow */}
+                        <div className="absolute top-[98%] left-4 w-2 h-2 bg-slate-900 rotate-45 border-r border-b border-white/5" />
+                      </div>
+                    </div>
+
+                    {/* 2. The Truncated Text with Visual Cue */}
+                    <div className="flex items-center gap-1 overflow-hidden">
+                      <p className="text-[13px] font-bold text-slate-800 truncate cursor-default select-none">
+                        {doc.label}
+                      </p>
+
+                      {/* Small visual cue (only visible if you want to hint that more text exists) */}
+                      {doc.label.length > 20 && (
+                        <div className="w-1.5 h-1.5 rounded-full bg-indigo-400/50 shrink-0" title="Full name available" />
+                      )}
+                    </div>
                   </div>
 
                   {/* 3. The "Smart Fit" Action Bar */}
@@ -619,12 +679,7 @@ const ITRCard = ({ itr, brokers, onRefresh }) => {
                     <IconButton
                       icon={<MdOutlineDownload size={18} />}
                       label="Save"
-                      onClick={() => {
-                        const a = document.createElement("a");
-                        a.href = doc.url;
-                        a.download = doc.label;
-                        a.click();
-                      }}
+                      onClick={() => {handleDownload(doc.url,doc.label) }}
                       activeClass="text-emerald-600 bg-emerald-50 hover:bg-emerald-600 hover:text-white"
                     />
                     <IconButton
