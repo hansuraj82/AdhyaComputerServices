@@ -146,7 +146,7 @@ export default function NotificationCenter() {
                     {/* The Text Label */}
                     <span>
                       {n.type === "EXPIRED"
-                        ? `Expired ${Math.abs(n.daysLeft)} d ago`
+                        ? `Expired ${Math.abs(n.daysLeft)}d ago`
                         : n.daysLeft === 0 ? "Expiring Today" : `Expires in ${n.daysLeft} d`
                       }
                     </span>

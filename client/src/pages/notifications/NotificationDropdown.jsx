@@ -87,7 +87,8 @@ export default function NotificationDropdown({ onClose }) {
                   }`}>
                   {n.type === "EXPIRED"
                     ? `Expired ${Math.abs(n.daysLeft)}d ago`
-                    : `Expires in ${n.daysLeft} days`}
+                    : n.daysLeft === 0 ? "Expiring Today" : `Expires in ${n.daysLeft}d`
+                  }
                 </p>
               </div>
 
