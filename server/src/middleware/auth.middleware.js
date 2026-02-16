@@ -10,7 +10,7 @@ const protect = async (req, res, next) => {
     req.user = await User.findById(decoded.id).select("-password");
     next();
   } catch {
-    res.status(401).json({ message: "Invalid token" });
+    res.status(401).json({ message: "Session expired. Please login again." });
   }
 };
 

@@ -18,8 +18,6 @@ const errorHandler = (err, req, res, next) => {
       .join(", ");
   }
 
-  console.error(err);
-
   res.status(statusCode).json({
     success: false,
     message
