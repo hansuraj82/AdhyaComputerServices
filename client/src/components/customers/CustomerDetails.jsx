@@ -16,12 +16,14 @@ const CustomerDocuments = lazy(() => import("./CustomerDocuments"));
 const CustomerPolicies = lazy(() => import("./CustomerPolicies"));
 const CustomerGST = lazy(() => import("./CustomerGST"));
 const CustomerITR = lazy(() => import("./CustomerITR"));
+const CustomerNotes = lazy(() => import("./CustomerNotes"));
 
 const TABS = [
   { id: "documents", label: "Documents" },
   { id: "policies", label: "Policies" },
   { id: "gst", label: "GST Profile" },
-  { id: "itr", label: "ITR Filings" }
+  { id: "itr", label: "ITR Filings" },
+  { id: "notes", label: "Notes" }
 ];
 
 export default function CustomerDetails() {
@@ -34,7 +36,7 @@ export default function CustomerDetails() {
   const [activeTab, setActiveTab] = useState("documents");
   const [isNotFound, setIsNotFound] = useState(false);
 
-   document.title = customer ? `${customer.name} | Details` : `Customer Details | Adhya Computer`;
+  document.title = customer ? `${customer.name} | Details` : `Customer Details | Adhya Computer`;
 
   const fetchCustomer = useCallback(async () => {
     try {
@@ -133,8 +135,8 @@ export default function CustomerDetails() {
                   key={tab.id}
                   onClick={() => setActiveTab(tab.id)}
                   className={`whitespace-nowrap px-5 py-2 rounded-xl text-[11px] font-black uppercase transition-all cursor-pointer ${activeTab === tab.id
-                      ? "bg-white text-slate-900 shadow-sm"
-                      : "text-slate-500"
+                    ? "bg-white text-slate-900 shadow-sm"
+                    : "text-slate-500"
                     }`}
                 >
                   {tab.label}
@@ -148,6 +150,7 @@ export default function CustomerDetails() {
                 {activeTab === "policies" && <CustomerPolicies customerId={id} />}
                 {activeTab === "gst" && <CustomerGST customerId={id} />}
                 {activeTab === "itr" && <CustomerITR customerId={id} />}
+                {activeTab === "notes" && <CustomerNotes customerId={id} />}
               </Suspense>
             </div>
           </section>
@@ -158,23 +161,23 @@ export default function CustomerDetails() {
 }
 
 const GlobalLoader = ({ primaryBrand = "#4f46e5" }) => (
-<div className="flex flex-col items-center justify-center py-50 sm:py-50">
-    
+  <div className="flex flex-col items-center justify-center py-50 sm:py-50">
+
     <div className="relative flex flex-col items-center justify-center p-8 text-center">
-      
+
       {/* Visual Layering */}
       <div className="relative flex items-center justify-center w-20 h-20">
-        <div 
+        <div
           className="absolute inset-0 rounded-full animate-ping opacity-10"
           style={{ backgroundColor: primaryBrand }}
         />
-        
+
         <div className="relative z-10 transition-transform duration-500">
           {/* User Icon instead of Shield for Customer context */}
-          <MdOutlinePersonSearch 
-            size={48} 
-            style={{ color: primaryBrand }} 
-            className="animate-pulse drop-shadow-sm" 
+          <MdOutlinePersonSearch
+            size={48}
+            style={{ color: primaryBrand }}
+            className="animate-pulse drop-shadow-sm"
           />
         </div>
       </div>
@@ -184,18 +187,19 @@ const GlobalLoader = ({ primaryBrand = "#4f46e5" }) => (
         <span className="text-[9px] font-black uppercase tracking-[0.2em] text-slate-500">
           Syncing Customer Profile
         </span>
-        
+
         {/* Modern thin loader line */}
         <div className="h-[1.5px] w-10 bg-slate-100 rounded-full overflow-hidden">
-          <div 
-            className="h-full animate-[loading_1.5s_infinite_ease-in-out]" 
+          <div
+            className="h-full animate-[loading_1.5s_infinite_ease-in-out]"
             style={{ backgroundColor: primaryBrand, width: '40%' }}
           />
         </div>
       </div>
     </div>
 
-    <style dangerouslySetInnerHTML={{ __html: `
+    <style dangerouslySetInnerHTML={{
+      __html: `
       @keyframes loading {
         0% { transform: translateX(-100%); }
         100% { transform: translateX(250%); }
@@ -205,7 +209,7 @@ const GlobalLoader = ({ primaryBrand = "#4f46e5" }) => (
 );
 
 const TabLoader = () => (
-<div className="flex flex-col items-center justify-center py-32">
+  <div className="flex flex-col items-center justify-center py-32">
     <MdRefresh style={{ color: "oklch(0.511 0.262 276.966)" }} size={32} className="animate-spin mb-4 opacity-80" />
     <span className="text-sm font-bold text-slate-300 uppercase tracking-widest">Loading Module...</span>
   </div>

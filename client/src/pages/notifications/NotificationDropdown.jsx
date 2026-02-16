@@ -35,7 +35,6 @@ export default function NotificationDropdown({ onClose }) {
       const res = await getNotificationsForBellApi();
       setNotifications(res.data.notifications);
     } catch (err) {
-      console.error("Failed to fetch notifications");
     } finally {
       setLoading(false);
     }

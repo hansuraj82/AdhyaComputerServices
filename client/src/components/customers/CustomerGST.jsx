@@ -244,8 +244,6 @@ const GSTCard = ({ record, brokers, onRefresh }) => {
     gstPassword: record.gstPassword || ""
   });
 
-  console.log(record);
-
 
   const handleCopy = (text, label) => {
     navigator.clipboard.writeText(text);
