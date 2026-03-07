@@ -98,7 +98,7 @@ export default function Customers() {
                 await fetchCustomers();
             }
         } catch (error) {
-            toast.error(error.message || "something went wrong while Deleting")
+            toast.error(error.response?.data?.message || "something went wrong while Deleting")
         } finally {
             setTrashLoading(false);
             setTrashId(null);
@@ -121,9 +121,10 @@ export default function Customers() {
                 await fetchCustomers();
             }
         } catch (error) {
-            toast.error(error.message || "something went wrong while Deleting")
+            toast.error(error.response?.data?.message || "something went wrong while Deleting")
         } finally {
             setBulkTrashLoading(false);
+            setBulkTrashId(null);
         }
 
 
@@ -131,7 +132,7 @@ export default function Customers() {
 
     const isSomeSelected = selectedIds.length > 0 && !isAllSelected;
 
-    const [showNewUpdate,setShowNewUpdate] = useState(true);
+    const [showNewUpdate,setShowNewUpdate] = useState(false);
 
     const onClose = () => {
         setShowNewUpdate(false);

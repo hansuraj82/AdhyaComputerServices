@@ -1,6 +1,8 @@
 import { useEffect, useRef } from "react";
 import CustomerRow from "./CustomerRow";
 import { MdOutlineClose, MdDeleteSweep, MdChecklist } from "react-icons/md";
+import { AuthContext } from "../../context/AuthContext";
+import { useContext } from "react";
 
 export default function CustomerTable({
   customers,
@@ -15,6 +17,7 @@ export default function CustomerTable({
   onBulkTrash
 }) {
   const selectAllRef = useRef(null);
+  const { auth } = useContext(AuthContext);
 
   useEffect(() => {
     if (selectAllRef.current) {
@@ -36,13 +39,13 @@ export default function CustomerTable({
           </div>
 
           <div className="flex items-center gap-2">
-            <button
+            {auth.role === "owner" && <button
               onClick={onBulkTrash}
               className="cursor-pointer flex items-center gap-2 px-3 py-1.5 text-sm font-semibold text-red-400 hover:bg-red-500/10 rounded-lg transition-colors"
             >
               <MdDeleteSweep size={20} />
               <span>Bulk Trash</span>
-            </button>
+            </button>}
 
             <button
               onClick={onUnselectAll}
@@ -57,7 +60,7 @@ export default function CustomerTable({
 
       {/* 🔹 Table Header (Modernized) */}
       <div className="flex items-center justify-between px-6 py-4 bg-slate-50/50 rounded-t-xl border-x border-t border-slate-200">
-        <div className="flex items-center gap-4">
+        {auth.role === "owner" && <div className="flex items-center gap-4">
           <div className="relative flex items-center justify-center">
             <input
               ref={selectAllRef}
@@ -71,6 +74,7 @@ export default function CustomerTable({
             {isAllSelected ? "Unelect All" : "Selection"}
           </span>
         </div>
+        }
 
         <div className="flex items-center gap-2 text-slate-400">
           <MdChecklist size={20} />

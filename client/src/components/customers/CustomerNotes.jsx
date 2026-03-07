@@ -1,4 +1,4 @@
-import { useEffect, useState, useCallback } from "react";
+import { useEffect, useState, useCallback, useContext } from "react";
 import toast from "react-hot-toast";
 import {
     getNotesByCustomer,
@@ -18,6 +18,7 @@ import {
     MdEventNote,
     MdSave
 } from "react-icons/md";
+import { AuthContext } from "../../context/AuthContext.jsx";
 
 export default function CustomerNotes({ customerId }) {
     const [notes, setNotes] = useState([]);
@@ -27,6 +28,7 @@ export default function CustomerNotes({ customerId }) {
 
     const [newNote, setNewNote] = useState({ title: "", content: "" });
     const [errors, setErrors] = useState({});
+
 
     const fetchNotes = useCallback(async () => {
         try {
@@ -146,6 +148,7 @@ const NoteCard = ({ note, onRefresh }) => {
     const [showDeleteModal, setShowDeleteModal] = useState(false);
     const [editForm, setEditForm] = useState({ title: note.title, content: note.content });
     const [errors, setErrors] = useState({});
+    const { auth } = useContext(AuthContext);
 
     const validate = (data) => {
         const errs = {};
@@ -208,7 +211,7 @@ const NoteCard = ({ note, onRefresh }) => {
                             className="w-full font-bold text-slate-800 border-b pb-1 outline-none focus:border-indigo-500"
                             label="Note Title"
                             value={editForm.title}
-                            onChange={(e) => {setEditForm({ ...editForm, title: e.target.value }); setErrors(prev => ({ ...prev, ["title"]: "" }))}}
+                            onChange={(e) => { setEditForm({ ...editForm, title: e.target.value }); setErrors(prev => ({ ...prev, ["title"]: "" })) }}
                             error={errors.title}
                         />
                         <div className="space-y-1">
@@ -251,14 +254,14 @@ const NoteCard = ({ note, onRefresh }) => {
                                 <div className="h-2 w-2 rounded-full bg-emerald-400 animate-pulse" />
                             </div>
 
-                            <div className="flex gap-1 translate-x-4 opacity-0 group-hover:translate-x-0 group-hover:opacity-100 transition-all duration-300">
+                            {auth.role === "owner" && <div className="flex gap-1 translate-x-4 opacity-0 group-hover:translate-x-0 group-hover:opacity-100 transition-all duration-300">
                                 <button onClick={() => setIsEditing(true)} className="p-2 bg-white shadow-sm border border-slate-100 rounded-xl text-slate-400 hover:text-indigo-600 hover:border-indigo-100 transition-all cursor-pointer">
                                     <MdEdit size={18} />
                                 </button>
                                 <button onClick={() => setShowDeleteModal(true)} className="p-2 bg-white shadow-sm border border-slate-100 rounded-xl text-slate-400 hover:text-rose-600 hover:border-rose-100 transition-all cursor-pointer">
                                     <MdDeleteOutline size={18} />
                                 </button>
-                            </div>
+                            </div>}
                         </div>
 
                         {/* Title - Increased font weight and letter spacing */}

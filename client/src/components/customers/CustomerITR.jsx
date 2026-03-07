@@ -1,4 +1,4 @@
-import { useEffect, useState, useCallback } from "react";
+import { useEffect, useState, useCallback, useContext } from "react";
 import toast from "react-hot-toast";
 import {
   getITRsByCustomer,
@@ -30,6 +30,7 @@ import {
   MdOutlineDescription,
   MdInfoOutline
 } from "react-icons/md";
+import { AuthContext } from "../../context/AuthContext";
 
 export default function CustomerITR({ customerId }) {
   const [itrs, setItrs] = useState([]);
@@ -212,7 +213,7 @@ const ITRCard = ({ itr, brokers, onRefresh }) => {
   const [docToDelete, setDocToDelete] = useState(null);
   const [errors, setErrors] = useState({});
   const [docLabelError, setDocLabelError] = useState("");
-
+  const { auth } = useContext(AuthContext);
 
 
   const [form, setForm] = useState({
@@ -295,12 +296,12 @@ const ITRCard = ({ itr, brokers, onRefresh }) => {
       setIsProcessing(true);
       await deleteDocument(itr._id, docToDelete.id);
       toast.success("Document removed");
-      setDocToDelete(null);
       onRefresh();
     } catch {
       toast.error("Delete failed");
     } finally {
       setIsProcessing(false);
+      setDocToDelete(null);
     }
   };
 
@@ -329,7 +330,7 @@ const ITRCard = ({ itr, brokers, onRefresh }) => {
     }
   };
 
-    const handleDownload = async (url, filename) => {
+  const handleDownload = async (url, filename) => {
     try {
       // 1. Fetch the data from the URL
       const response = await fetch(url);
@@ -507,7 +508,7 @@ const ITRCard = ({ itr, brokers, onRefresh }) => {
             <div className="flex items-center gap-2 sm:gap-4">
 
               {/* Command Button: Edit */}
-              <div className="flex flex-col items-center group">
+              {auth.role === "owner" && <div className="flex flex-col items-center group">
                 <button
                   onClick={() => setIsEditing(true)}
                   className="w-12 h-12 flex items-center justify-center rounded-2xl bg-white border border-slate-200 text-slate-500 shadow-sm transition-all duration-300 group-hover:border-indigo-500 group-hover:text-indigo-600 group-hover:-translate-y-1 group-active:scale-90 cursor-pointer"
@@ -518,9 +519,10 @@ const ITRCard = ({ itr, brokers, onRefresh }) => {
                   Edit
                 </span>
               </div>
+              }
 
               {/* Command Button: Delete */}
-              <div className="flex flex-col items-center group">
+              {auth.role === "owner" && <div className="flex flex-col items-center group">
                 <button
                   onClick={() => setShowDeleteModal(true)}
                   className="w-12 h-12 flex items-center justify-center rounded-2xl bg-white border border-slate-200 text-slate-400 shadow-sm transition-all duration-300 group-hover:border-rose-500 group-hover:text-rose-600 group-hover:-translate-y-1 group-active:scale-90 cursor-pointer"
@@ -530,7 +532,7 @@ const ITRCard = ({ itr, brokers, onRefresh }) => {
                 <span className="mt-2 text-[10px] font-black text-slate-400 uppercase tracking-widest group-hover:text-slate-900 transition-colors">
                   Delete
                 </span>
-              </div>
+              </div>}
             </div>
             {/* Right: Primary Intelligence Button */}
             <button
@@ -676,18 +678,18 @@ const ITRCard = ({ itr, brokers, onRefresh }) => {
                       onClick={() => window.open(doc.url)}
                       activeClass="text-indigo-600 bg-indigo-50 hover:bg-indigo-600 hover:text-white"
                     />
-                    <IconButton
+                    {auth.role === "owner" && <IconButton
                       icon={<MdOutlineDownload size={18} />}
                       label="Save"
-                      onClick={() => {handleDownload(doc.url,doc.label) }}
+                      onClick={() => { handleDownload(doc.url, doc.label) }}
                       activeClass="text-emerald-600 bg-emerald-50 hover:bg-emerald-600 hover:text-white"
-                    />
-                    <IconButton
+                    />}
+                    {auth.role === "owner" && <IconButton
                       icon={<MdDeleteOutline size={18} />}
                       label="Del"
                       onClick={() => setDocToDelete({ id: doc._id, label: doc.label })}
                       activeClass="text-slate-400 bg-slate-50 hover:bg-rose-600 hover:text-white"
-                    />
+                    />}
                   </div>
                 </div>
               ))}

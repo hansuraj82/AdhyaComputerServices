@@ -1,5 +1,7 @@
+import { useContext } from "react";
 import { MdDeleteOutline, MdPhone, MdLocationOn, MdFingerprint, MdChevronRight } from "react-icons/md";
 import { useNavigate } from "react-router-dom";
+import { AuthContext } from "../../context/AuthContext";
 
 export default function CustomerRow({
   customer,
@@ -9,7 +11,7 @@ export default function CustomerRow({
 }) {
   const navigate = useNavigate();
   const goToDetails = () => navigate(`/customers/${customer._id}`);
-
+  const { auth } = useContext(AuthContext);
   return (
     <div
       className={`
@@ -23,12 +25,12 @@ export default function CustomerRow({
     >
       {/* 1. Selection Checkbox */}
       <div className="flex items-center">
-        <input
+        {auth.role === "owner" && <input
           type="checkbox"
           checked={isSelected}
           onChange={() => onSelect(customer._id)}
           className="w-4 h-4 rounded border-slate-300 text-indigo-600 focus:ring-indigo-500 cursor-pointer"
-        />
+        />}
       </div>
 
       {/* 2. Customer Avatar/Icon - Adds a 'Premium' feel */}
@@ -77,13 +79,13 @@ export default function CustomerRow({
 
       {/* 4. Action Group */}
       <div className="flex items-center gap-1 pl-4 border-l border-slate-100">
-        <button
+        {auth.role === "owner" && <button
           onClick={() => setTrashId(customer._id)}
           className="p-2 text-slate-400 hover:text-red-600 hover:bg-red-50 rounded-lg transition-colors cursor-pointer"
           title="Delete"
         >
           <MdDeleteOutline size={20} />
-        </button>
+        </button>}
 
         <button
           onClick={goToDetails}

@@ -13,6 +13,8 @@ import ConfirmModal from "../ui/ConfirmModal";
 import { deleteDocument, getCustomerById, uploadDocument } from "../../services/customer.service";
 import toast from "react-hot-toast";
 import { uploadFile } from "../../utils/cloudinaryUpload";
+import { AuthContext } from "../../context/AuthContext";
+import { useContext } from "react";
 
 export default function CustomerDocuments({ customerId }) {
   // Document & Error states
@@ -23,6 +25,7 @@ export default function CustomerDocuments({ customerId }) {
   const [error, setError] = useState(""); // 🔹 Added error state back
   const [deleteDocId, setDeleteDocId] = useState(null);
   const [docDelLoading, setDocDelLoading] = useState(false);
+  const { auth } = useContext(AuthContext);
   // 🔹 Updated HandleUpload with Inline Error Logic
 
   const fetchCustomer = useCallback(async () => {
@@ -60,7 +63,7 @@ export default function CustomerDocuments({ customerId }) {
       setDocLabel("");
       toast.success("Document added successfully");
       fetchCustomer();
-    } catch (err){
+    } catch (err) {
       toast.error(err.response?.data?.message || "Upload failed");
     } finally {
       setUploading(false);
@@ -89,12 +92,14 @@ export default function CustomerDocuments({ customerId }) {
       fetchCustomer();
       toast.success("Document deleted");
 
-    }catch (err) {
+    } catch (err) {
       toast.error(err.response?.data?.message || "something went wrong")
     }
-    
+
     finally {
       setDeletingId(null);
+      setDeleteDocId(null);
+      setDocDelLoading(false);
     }
   };
 
@@ -186,7 +191,7 @@ export default function CustomerDocuments({ customerId }) {
                           label="View"
                           onClick={() => window.open(doc.url, "_blank")}
                         />
-                        <DocAction
+                        {auth.role === "owner" && <DocAction
                           icon={<MdOutlineDownload size={14} />}
                           label="Save"
                           onClick={() =>
@@ -196,14 +201,14 @@ export default function CustomerDocuments({ customerId }) {
                             )
                           }
                           color="text-emerald-600 bg-emerald-50 hover:bg-emerald-100"
-                        />
-                        <DocAction
+                        />}
+                        {auth.role === "owner" && <DocAction
                           loading={isDeleting}
                           icon={<MdDeleteOutline size={14} />}
                           label={isDeleting ? "" : "Delete"}
                           onClick={() => setDeleteDocId(doc._id)}
                           color="text-rose-500 bg-rose-50 hover:bg-rose-100"
-                        />
+                        />}
                       </div>
                     </div>
                   </div>

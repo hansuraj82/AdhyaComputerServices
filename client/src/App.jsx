@@ -7,6 +7,7 @@ import ProtectedRoute from "./components/auth/ProtectedRoute";
 import DashboardLayout from "./components/layout/DashboardLayout";
 import FullPageLoader from "./components/ui/FullPageLoader";
 import { NotificationProvider } from "./components/context/NotificationContext";
+// import StaffManagement from "./pages/staff/StaffManagement";
 
 // 🔹 Lazy Loaded Auth Pages
 const Login = lazy(() => import("./pages/auth/Login"));
@@ -26,6 +27,8 @@ const NotificationCenter = lazy(() => import("./pages/notifications/Notification
 const AllPolicies = lazy(() => import("./pages/policy/AllPolicies"));
 const GSTVault = lazy(() => import("./pages/gst/GSTVault"));
 const ITRVault = lazy(() => import("./pages/itr/ITRVault"));
+const AuditLog = lazy(() => import('./pages/admin/AuditLog'));
+const StaffManagement = lazy(() => import('./pages/staff/StaffManagement'));
 
 // 🔹 Other
 const NotFound = lazy(() => import("./components/NotFound"));
@@ -80,35 +83,104 @@ export default function App() {
                 </ProtectedRoute>
               }
             >
-              {/* Default redirect */}
               <Route path="/" element={<Navigate to="/customers" replace />} />
 
-              {/* Customers Resource Group */}
+              {/* 🟢 ACCESSIBLE BY ALL (Admin & Staff) */}
               <Route path="customers">
                 <Route index element={<Customers />} />
                 <Route path="add" element={<AddCustomer />} />
-                <Route path="trash" element={<TrashCustomers />} />
-                <Route path="edit/:id" element={<EditCustomer />} />
                 <Route path=":id" element={<CustomerDetails />} />
-                <Route path="*" element={<NotFound />} />
               </Route>
-
-              {/* Account Settings */}
+              
               <Route path="change-password" element={<ChangePassword />} />
               <Route path="change-email" element={<ChangeEmail />} />
-              <Route path="agent" element={<BrokerManagement />} />
-              <Route path="notifications" element={<NotificationCenter />} />
-              <Route path="policy" element={<AllPolicies />} />
-              <Route path="gst" element={<GSTVault />} />
-              <Route path="itr" element={<ITRVault />} />
+
+              {/* 🔴 ADMIN ONLY (Blocked for Staff) */}
+              <Route path="customers/trash" element={
+                <ProtectedRoute allowedRoles={['owner']}><TrashCustomers /></ProtectedRoute>
+              } />
+              <Route path="customers/edit/:id" element={
+                <ProtectedRoute allowedRoles={['owner']}><EditCustomer /></ProtectedRoute>
+              } />
+              <Route path="agent" element={
+                <ProtectedRoute allowedRoles={['owner']}><BrokerManagement /></ProtectedRoute>
+              } />
+              <Route path="notifications" element={
+                <ProtectedRoute allowedRoles={['owner']}><NotificationCenter /></ProtectedRoute>
+              } />
+              <Route path="policy" element={
+                <ProtectedRoute allowedRoles={['owner']}><AllPolicies /></ProtectedRoute>
+              } />
+              <Route path="gst" element={
+                <ProtectedRoute allowedRoles={['owner']}><GSTVault /></ProtectedRoute>
+              } />
+              <Route path="itr" element={
+                <ProtectedRoute allowedRoles={['owner']}><ITRVault /></ProtectedRoute>
+              } />
+              <Route path="audit" element={
+                <ProtectedRoute allowedRoles={['owner']}><AuditLog /></ProtectedRoute>
+              } />
+              <Route path="staff" element={
+                <ProtectedRoute allowedRoles={['owner']}><StaffManagement /></ProtectedRoute>
+              } />
 
             </Route>
 
-            {/* ❌ 404 - Global Catch */}
+            {/* ❌ 404 */}
             <Route path="*" element={<NotFound />} />
           </Routes>
         </Suspense>
+
       </NotificationProvider>
     </>
   );
 }
+
+
+
+//         <Suspense fallback={<FullPageLoader message="Synchronizing Environment..." />}>
+        //   <Routes>
+        //     {/* 🔓 Public Routes */}
+        //     <Route path="/login" element={<Login />} />
+        //     <Route path="/forgot-password" element={<ForgotPassword />} />
+        //     <Route path="/reset-password/:token" element={<ResetPassword />} />
+
+        //     {/* 🔐 Protected Layout */}
+        //     <Route
+        //       element={
+        //         <ProtectedRoute>
+        //           <DashboardLayout />
+        //         </ProtectedRoute>
+        //       }
+        //     >
+        //       {/* Default redirect */}
+        //       <Route path="/" element={<Navigate to="/customers" replace />} />
+
+        //       {/* Customers Resource Group */}
+        //       <Route path="customers">
+        //         <Route index element={<Customers />} />
+        //         <Route path="add" element={<AddCustomer />} />
+        //         <Route path="trash" element={<TrashCustomers />} />
+        //         <Route path="edit/:id" element={<EditCustomer />} />
+        //         <Route path=":id" element={<CustomerDetails />} />
+        //         <Route path="*" element={<NotFound />} />
+        //       </Route>
+
+        //       {/* Account Settings */}
+        //       <Route path="change-password" element={<ChangePassword />} />
+        //       <Route path="change-email" element={<ChangeEmail />} />
+        //       <Route path="agent" element={<BrokerManagement />} />
+        //       <Route path="notifications" element={<NotificationCenter />} />
+        //       <Route path="policy" element={<AllPolicies />} />
+        //       <Route path="gst" element={<GSTVault />} />
+        //       <Route path="itr" element={<ITRVault />} />
+        //       <Route path="audit" element={<AuditLog />} />
+        //       <Route path="staff" element={<StaffManagement />} />
+
+
+        //     </Route>
+
+        //     {/* ❌ 404 - Global Catch */}
+        //     <Route path="*" element={<NotFound />} />
+        //   </Routes>
+        // </Suspense>

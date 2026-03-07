@@ -10,8 +10,11 @@ import {
   MdOutlineAnalytics,
   MdOutlineSupportAgent
 } from "react-icons/md";
+import { AuthContext } from "../../context/AuthContext";
+import { useContext } from "react";
 
 export default function Sidebar({ isOpen, onClose }) {
+  const { auth } = useContext(AuthContext);
   const base =
     "fixed inset-y-0 left-0 z-40 w-64 bg-slate-50 border-r border-slate-200 " +
     "transition-transform duration-300 ease-in-out md:static md:translate-x-0 pt-16 md:pt-6";
@@ -43,17 +46,19 @@ export default function Sidebar({ isOpen, onClose }) {
             <SidebarGroup label="Management">
               <NavItem to="/customers" end={true} icon={<MdPeople />} label="All Customers" onClick={onClose} styles={{ linkBase, getLinkStyles }} />
               <NavItem to="/customers/add" icon={<MdPersonAddAlt />} label="New Registration" onClick={onClose} styles={{ linkBase, getLinkStyles }} />
-              <NavItem to="/agent" icon={<MdOutlineSupportAgent />} label="Agent Network" onClick={onClose} styles={{ linkBase, getLinkStyles }} />
+              {auth.role === "owner" && (<><NavItem to="/agent" icon={<MdOutlineSupportAgent />} label="Agent Network" onClick={onClose} styles={{ linkBase, getLinkStyles }} />
+                <NavItem to="/staff" icon={<MdOutlineSupportAgent />} label="Staff" onClick={onClose} styles={{ linkBase, getLinkStyles }} />
+                <NavItem to="/audit" icon={<MdOutlineSupportAgent />} label="Audit Logs" onClick={onClose} styles={{ linkBase, getLinkStyles }} /></>)}
             </SidebarGroup>
 
             <div className="mx-6 my-2 border-t border-slate-200/50" />
 
             {/* GROUP 2: FINANCIAL SERVICES */}
-            <SidebarGroup label="Service Desk">
+            {auth.role === "owner" && (<> <SidebarGroup label="Service Desk">
               <NavItem to="/policy" icon={<MdOutlinePolicy />} label="Insurance Policy" onClick={onClose} styles={{ linkBase, getLinkStyles }} />
               <NavItem to="/gst" icon={<MdOutlineReceiptLong />} label="GST Compliance" onClick={onClose} styles={{ linkBase, getLinkStyles }} />
               <NavItem to="/itr" icon={<MdOutlineAnalytics />} label="ITR Filing" onClick={onClose} styles={{ linkBase, getLinkStyles }} />
-            </SidebarGroup>
+            </SidebarGroup></>)}
 
             <div className="mx-6 my-2 border-t border-slate-200/50" />
 
@@ -61,7 +66,7 @@ export default function Sidebar({ isOpen, onClose }) {
             <SidebarGroup label="Settings & Security">
               <NavItem to="/change-password" icon={<MdLockOutline />} label="Update Password" onClick={onClose} styles={{ linkBase, getLinkStyles }} />
               <NavItem to="/change-email" icon={<MdOutlineMail />} label="Email Update" onClick={onClose} styles={{ linkBase, getLinkStyles }} />
-              <NavItem to="/customers/trash" icon={<MdDeleteOutline />} label="Recycle Bin" onClick={onClose} styles={{ linkBase, getLinkStyles }} />
+              {auth.role === "owner" && <NavItem to="/customers/trash" icon={<MdDeleteOutline />} label="Recycle Bin" onClick={onClose} styles={{ linkBase, getLinkStyles }} />}
             </SidebarGroup>
 
           </nav>
@@ -71,7 +76,7 @@ export default function Sidebar({ isOpen, onClose }) {
             <div className="flex items-center justify-center gap-2">
               <div className="w-1.5 h-1.5 rounded-full bg-indigo-400 animate-pulse" />
               <p className="text-[10px] text-indigo-900 font-black tracking-widest uppercase">
-                Adhya v1.0.0
+                Adhya v2.2.1
               </p>
             </div>
           </div>

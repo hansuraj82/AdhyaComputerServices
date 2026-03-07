@@ -1,4 +1,4 @@
-import { useEffect, useState, useCallback } from "react";
+import { useEffect, useState, useCallback, useContext } from "react";
 import toast from "react-hot-toast";
 import {
   getGSTByCustomer,
@@ -33,6 +33,7 @@ import {
   MdOutlineDownload,
   MdInfoOutline
 } from "react-icons/md";
+import { AuthContext } from "../../context/AuthContext";
 
 const GST_REGEX = /^[0-9]{2}[A-Z]{5}[0-9]{4}[A-Z]{1}[1-9A-Z]{1}Z[0-9A-Z]{1}$/;
 
@@ -243,6 +244,7 @@ const GSTCard = ({ record, brokers, onRefresh }) => {
     gstId: record.gstId || "",
     gstPassword: record.gstPassword || ""
   });
+  const { auth } = useContext(AuthContext);
 
 
   const handleCopy = (text, label) => {
@@ -514,7 +516,7 @@ const GSTCard = ({ record, brokers, onRefresh }) => {
             <div className="flex items-center gap-2 sm:gap-4">
 
               {/* Command Button: Edit */}
-              <div className="flex flex-col items-center group">
+              {auth.role === "owner" && <div className="flex flex-col items-center group">
                 <button
                   onClick={() => setIsEditing(true)}
                   className="w-12 h-12 flex items-center justify-center rounded-2xl bg-white border border-slate-200 text-slate-500 shadow-sm transition-all duration-300 group-hover:border-indigo-500 group-hover:text-indigo-600 group-hover:-translate-y-1 group-active:scale-90 cursor-pointer"
@@ -524,10 +526,10 @@ const GSTCard = ({ record, brokers, onRefresh }) => {
                 <span className="mt-2 text-[10px] font-black text-slate-400 uppercase tracking-widest group-hover:text-slate-900 transition-colors">
                   Edit
                 </span>
-              </div>
+              </div>}
 
               {/* Command Button: Delete */}
-              <div className="flex flex-col items-center group">
+              {auth.role === "owner" && <div className="flex flex-col items-center group">
                 <button
                   onClick={() => setShowDeleteModal(true)}
                   className="w-12 h-12 flex items-center justify-center rounded-2xl bg-white border border-slate-200 text-slate-400 shadow-sm transition-all duration-300 group-hover:border-rose-500 group-hover:text-rose-600 group-hover:-translate-y-1 group-active:scale-90 cursor-pointer"
@@ -537,7 +539,7 @@ const GSTCard = ({ record, brokers, onRefresh }) => {
                 <span className="mt-2 text-[10px] font-black text-slate-400 uppercase tracking-widest group-hover:text-slate-900 transition-colors">
                   Delete
                 </span>
-              </div>
+              </div>}
             </div>
             {/* Right: Primary Intelligence Button */}
             <button
@@ -712,18 +714,18 @@ const GSTCard = ({ record, brokers, onRefresh }) => {
                       onClick={() => window.open(doc.url)}
                       activeClass="text-indigo-600 bg-indigo-50 hover:bg-indigo-600 hover:text-white"
                     />
-                    <IconButton
+                    {auth.role === "owner" && <IconButton
                       icon={<MdOutlineDownload size={18} />}
                       label="Save"
-                      onClick={() => {handleDownload(doc.url,doc.label)}}
+                      onClick={() => { handleDownload(doc.url, doc.label) }}
                       activeClass="text-emerald-600 bg-emerald-50 hover:bg-emerald-600 hover:text-white"
-                    />
-                    <IconButton
+                    />}
+                    {auth.role === "owner" && <IconButton
                       icon={<MdDeleteOutline size={18} />}
                       label="Del"
                       onClick={() => setDocToDelete({ id: doc._id, label: doc.label })}
                       activeClass="text-slate-400 bg-slate-50 hover:bg-rose-600 hover:text-white"
-                    />
+                    />}
                   </div>
                 </div>
               ))}

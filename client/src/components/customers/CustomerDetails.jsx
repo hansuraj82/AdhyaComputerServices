@@ -11,6 +11,8 @@ import {
   MdOutlinePersonSearch,
   MdRefresh
 } from "react-icons/md";
+import { AuthContext } from "../../context/AuthContext";
+import { useContext } from "react";
 
 const CustomerDocuments = lazy(() => import("./CustomerDocuments"));
 const CustomerPolicies = lazy(() => import("./CustomerPolicies"));
@@ -35,6 +37,7 @@ export default function CustomerDetails() {
   const [pageLoading, setPageLoading] = useState(true);
   const [activeTab, setActiveTab] = useState("documents");
   const [isNotFound, setIsNotFound] = useState(false);
+  const { auth } = useContext(AuthContext);
 
   document.title = customer ? `${customer.name} | Details` : `Customer Details | Adhya Computer`;
 
@@ -67,7 +70,7 @@ export default function CustomerDetails() {
           <div className="flex items-center gap-3 flex-wrap">
             <button
               onClick={() => navigate(-1)}
-              className="p-2 hover:bg-slate-100 rounded-full transition-all text-slate-400 hover:text-slate-900"
+              className="p-2 hover:bg-slate-100 rounded-full transition-all text-slate-400 hover:text-slate-900 cursor-pointer"
             >
               <MdArrowBack size={22} />
             </button>
@@ -80,12 +83,12 @@ export default function CustomerDetails() {
             </div>
           </div>
 
-          <button
+          {auth.role === "owner" && <button
             onClick={() => navigate(`/customers/edit/${id}`)}
             className="w-full sm:w-auto flex items-center justify-center gap-2 px-5 py-2.5 bg-slate-900 text-white rounded-xl text-xs font-black uppercase tracking-widest shadow-lg active:scale-95 cursor-pointer"
           >
             <CiEdit size={18} /> Edit Profile
-          </button>
+          </button>}
         </div>
       </div>
 

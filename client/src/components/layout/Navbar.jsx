@@ -6,21 +6,23 @@ import {
   MdShield
 } from "react-icons/md";
 import LogOutBtn from "../ui/LogOutBtn";
-import { getOwnerEmailApi } from "../../services/auth.service";
 import NotificationDropdown from "../../pages/notifications/NotificationDropdown";
 import { useNotifications } from "../context/NotificationContext";
+import { useContext } from "react";
+import { AuthContext } from "../../context/AuthContext";
 
 export default function Navbar({ onToggleSidebar, onLogout }) {
   const [ownerEmail, setOwnerEmail] = useState("admin@system");
   const [showNotifications, setShowNotifications] = useState(false);
   const { count } = useNotifications();
+  const { auth } = useContext(AuthContext);
 
   useEffect(() => {
     let isMounted = true;
     const getEmail = async () => {
       try {
-        const res = await getOwnerEmailApi();
-        const email = res?.data?.owner?.[0]?.email;
+        const res = JSON.parse(localStorage.getItem("auth"));
+        const email = res?.email;
         if (isMounted && email) setOwnerEmail(email);
       } catch (error) {
         console.error("Identity Fetch Error:", error);
@@ -68,32 +70,32 @@ export default function Navbar({ onToggleSidebar, onLogout }) {
 
         {/* RIGHT: Actions & Profile */}
         <div className="flex items-center gap-2 sm:gap-4">
-
-          {/* Notification Engine */}
-          <div className="relative">
-            <button
-              onClick={() => setShowNotifications(!showNotifications)}
-              className={`p-2.5 rounded-xl transition-all duration-200 relative group cursor-pointer ${showNotifications
+          {auth.role === "owner" &&
+            <div className="relative">
+              <button
+                onClick={() => setShowNotifications(!showNotifications)}
+                className={`p-2.5 rounded-xl transition-all duration-200 relative group cursor-pointer ${showNotifications
                   ? "bg-indigo-50 text-indigo-600 ring-1 ring-indigo-100"
                   : "text-slate-400 hover:bg-slate-50 hover:text-slate-600"
-                }`}
-            >
-              <MdOutlineNotifications size={24} />
+                  }`}
+              >
+                <MdOutlineNotifications size={24} />
 
-              {count > 0 && (
-                <span className="absolute -top-1 -right-1 flex h-5 min-w-[20px] px-1 items-center justify-center bg-rose-500 text-white text-[10px] font-black rounded-full ring-4 ring-white shadow-lg animate-in zoom-in">
-                  {count > 100 ? "100+" : count}
-                </span>
+                {count > 0 && (
+                  <span className="absolute -top-1 -right-1 flex h-5 min-w-[20px] px-1 items-center justify-center bg-rose-500 text-white text-[10px] font-black rounded-full ring-4 ring-white shadow-lg animate-in zoom-in">
+                    {count > 100 ? "100+" : count}
+                  </span>
+                )}
+              </button>
+
+              {/* Dropdown Positioning */}
+              {showNotifications && (
+                <div className="absolute right-0 mt-3 w-80 sm:w-96 transform origin-top-right transition-all">
+                  <NotificationDropdown onClose={() => setShowNotifications(false)} />
+                </div>
               )}
-            </button>
+            </div>}
 
-            {/* Dropdown Positioning */}
-            {showNotifications && (
-              <div className="absolute right-0 mt-3 w-80 sm:w-96 transform origin-top-right transition-all">
-                <NotificationDropdown onClose={() => setShowNotifications(false)} />
-              </div>
-            )}
-          </div>
 
           <div className="h-8 w-[1px] bg-slate-200/60 mx-1 hidden sm:block" />
 

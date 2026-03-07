@@ -7,13 +7,16 @@ import {
   MdOutlineWarningAmber,
   MdChevronRight
 } from "react-icons/md";
+import { AuthContext } from "../../context/AuthContext";
+import { useContext } from "react";
 //import { formatDistanceToNow } from "date-fns"; // Recommended library for "time ago"
 
 export default function NotificationDropdown({ onClose }) {
   const [notifications, setNotifications] = useState([]);
-  const [loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
   const dropdownRef = useRef(null);
+  const { auth } = useContext(AuthContext);
 
   // Close when clicking outside
   useEffect(() => {
@@ -31,7 +34,11 @@ export default function NotificationDropdown({ onClose }) {
   }, []);
 
   const fetchNotifications = async () => {
+    if (!auth || auth.role !== "owner") {
+      return;
+    }
     try {
+      setLoading(true);
       const res = await getNotificationsForBellApi();
       setNotifications(res.data.notifications);
     } catch (err) {
