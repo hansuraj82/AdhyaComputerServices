@@ -2,16 +2,50 @@ import Customer from "../models/customer.model.js";
 import cloudinary from "../config/cloudinary.js"
 import asyncHandler from "../utils/asyncHandler.js";
 import { cascadeDeleteCustomerServices } from "../utils/cascadeDeleteCustomer.js";
+import { accessFilter } from "../utils/accessFilter.js";
+import { logAction } from "../utils/auditLogger.js";
 
 /* CREATE */
 export const addCustomer = asyncHandler(async (req, res) => {
-  const customer = await Customer.create(req.body);
+  const customer = await Customer.create({
+    ...req.body,
+    createdBy: req.user._id
+  });
+
+  await logAction({
+    userId: req.user._id,
+    action: "REGISTRATION",
+    entity: "CUSTOMER",
+    entityId: customer._id,
+    details: `Customer ${customer.name} REGISTERED`
+  });
+
   res.status(201).json(customer);
 });
 
 //GET A SINGLE CUSTOMER
+// export const getSingleCustomer = asyncHandler(async (req, res) => {
+//   const customer = await Customer.findById(req.params.id);
+//   res.status(200).json(customer);
+// });
+
 export const getSingleCustomer = asyncHandler(async (req, res) => {
-  const customer = await Customer.findById(req.params.id);
+  // 1. Generate the filter based on the logged-in user's role
+  const filter = accessFilter(req.user);
+
+  // 2. Merge the ID into the filter
+  // This ensures we look for the specific ID AND satisfy the role requirements
+  const customer = await Customer.findOne({ 
+    _id: req.params.id, 
+    ...filter 
+  }); 
+
+  if (!customer) {
+    // Better UX: Send 404 if not found or unauthorized via filter
+    res.status(404);
+    throw new Error("Customer not found or access expired");
+  }
+
   res.status(200).json(customer);
 });
 
@@ -21,7 +55,9 @@ export const getCustomers = asyncHandler(async (req, res) => {
   const limit = Math.min(Number(req.query.limit) || 10, 20); // max 50
   const skip = (page - 1) * limit;
 
-  const filter = { isDeleted: false };
+  const staffFilter = accessFilter(req.user);
+
+  const filter = { ...staffFilter, isDeleted: false };
 
   const [customers, total] = await Promise.all([
     Customer.find(filter)
@@ -76,13 +112,13 @@ export const getTrashCustomers = asyncHandler(async (req, res) => {
 export const searchCustomer = asyncHandler(async (req, res) => {
   const { type, q, isDeleted } = req.query;
 
-
+  const staffFilter = accessFilter(req.user);
 
   const page = Number(req.query.page) || 1;
   const limit = Math.min(Number(req.query.limit) || 10, 50);
   const skip = (page - 1) * limit;
 
-  let filter = { isDeleted: isDeleted === "true" };
+  let filter = { ...staffFilter, isDeleted: isDeleted === "true" };
 
   if (type === "name") filter.name = { $regex: q, $options: "i" };
   if (type === "mobile") filter.mobile = q;
@@ -265,6 +301,14 @@ export const addDocument = asyncHandler(async (req, res) => {
   });
 
   await customer.save();
+
+  await logAction({
+    userId: req.user._id,
+    action: "UPLOAD",
+    entity: "CUSTOMER DOCUMENT",
+    entityId: customer._id,
+    details: `${customer.name} ${type} UPLOADED `
+  });
 
   res.json({
     message: "Document added successfully",

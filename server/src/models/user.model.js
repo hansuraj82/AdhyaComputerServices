@@ -4,7 +4,15 @@ import bcrypt from "bcryptjs";
 const userSchema = new mongoose.Schema({
   email: { type: String, unique: true },
   password: { type: String, required: true },
-  role: { type: String, default: "owner" },
+  role: {
+    type: String,
+    enum: ["owner", "staff"],
+    default: "staff"
+  },
+  isActive: {
+    type: Boolean,
+    default: true
+  },
   resetPasswordToken: String,
   resetPasswordExpire: Date,
   emailChangeOTP: String,
@@ -14,7 +22,10 @@ const userSchema = new mongoose.Schema({
     type: Number,
     default: 0
   },
-  emailChangeOTPLastSentAt: Date
+  emailChangeOTPLastSentAt: Date,
+  name: String,
+  aadhar: String,
+  mobile: String
 
 });
 

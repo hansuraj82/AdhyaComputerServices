@@ -92,6 +92,11 @@ export const deletePolicy = asyncHandler(async (req, res) => {
 /* UPDATE POLICY */
 export const updatePolicy = asyncHandler(async (req, res) => {
   const policy = await PolicyService.findById(req.params.id);
+  if (policy.archived) {
+    const error = new Error("Policy Already Closed !");
+    error.statusCode = 403;
+    throw error;
+  }
 
   if (!policy) {
     const error = new Error("Policy not found");

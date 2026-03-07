@@ -5,10 +5,10 @@ const documentSchema = new mongoose.Schema({
   url: String,
   publicId: String,
   resourceType: {
-      type: String,
-      enum: ["image", "raw"],
-      required: true,
-    },
+    type: String,
+    enum: ["image", "raw"],
+    required: true,
+  },
   createdAt: {
     type: Date,
     default: Date.now
@@ -25,7 +25,13 @@ const customerSchema = new mongoose.Schema(
     documents: [documentSchema],
 
     isDeleted: { type: Boolean, default: false },
-    deletedAt: { type: Date, default: null }
+    deletedAt: { type: Date, default: null },
+    createdBy: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "User",
+      required: true
+    }
+
   },
   { timestamps: true }
 );

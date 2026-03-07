@@ -6,26 +6,29 @@ import asyncHandler from "../utils/asyncHandler.js";
 import resetPasswordTemplate from "../utils/email-templates/resetPasswordTemplate.js";
 import { otpEmailTemplate } from "../utils/email-templates/otpTemplates.js";
 
-export const getOwnerEmail = asyncHandler(async (req,res) => {
+export const getOwnerEmail = asyncHandler(async (req, res) => {
   const user = await User.find().select("email");
-  if(!user) return res.status(404).json({message: "Owner Not Found"})
-  res.status(200).json({owner: user});
+  if (!user) return res.status(404).json({ message: "Owner Not Found" })
+  res.status(200).json({ owner: user });
 })
 
 export const loginOwner = asyncHandler(async (req, res) => {
   const { email, password } = req.body;
-
   const user = await User.findOne({ email });
 
-
   if (!user || !(await user.matchPassword(password))) {
-    return res.status(401).json({ message: "Invalid credentials" });
+    return res.status(403).json({ message: "Invalid credentials" });
   }
+
+  if (!(user?.isActive)) return res.status(400).json({ message: "You Are Blocked By The Higher Authority. Kindly Contact To Your Manager To Unblock You" });
+
+
 
   res.json({
     _id: user._id,
     email: user.email,
-    token: generateToken(user._id)
+    token: generateToken(user._id),
+    role: user.role
   });
 });
 
@@ -36,7 +39,7 @@ export const changePassword = asyncHandler(async (req, res) => {
   const user = await User.findById(req.user._id);
 
   if (!user || !(await user.matchPassword(currentPassword))) {
-    return res.status(401).json({ message: "Current password is incorrect" });
+    return res.status(403).json({ message: "Current password is incorrect" });
   }
 
   user.password = newPassword;
@@ -117,7 +120,7 @@ export const requestEmailChange = asyncHandler(async (req, res) => {
 
   if (!user || !(await user.matchPassword(currentPassword))) {
     return res
-      .status(401)
+      .status(403)
       .json({ message: "Current password is incorrect" });
   }
 
@@ -144,11 +147,11 @@ export const requestEmailChange = asyncHandler(async (req, res) => {
   await user.save();
 
   await sendEmail({
-  to: newEmail,
-  subject: "🔐 Security Verification: New Email Sync",
-  text: `Your Adhya Computer verification code is: ${otp}. It expires in 10 mins.`,
-  html: otpEmailTemplate(otp)
-});
+    to: newEmail,
+    subject: "🔐 Security Verification: New Email Sync",
+    text: `Your Adhya Computer verification code is: ${otp}. It expires in 10 mins.`,
+    html: otpEmailTemplate(otp)
+  });
 
   res.json({
     message: "OTP sent to new email address"
@@ -236,13 +239,13 @@ export const resendEmailChangeOTP = asyncHandler(async (req, res) => {
   user.emailChangeOTPLastSentAt = Date.now();
 
   await user.save();
-  
+
   await sendEmail({
-  to: user.pendingEmail,
-  subject: "🔐 Security Verification: New Email Sync",
-  text: `Your Adhya Computer verification code is: ${otp}. It expires in 10 mins.`,
-  html: otpEmailTemplate(otp) // Use the template here
-});
+    to: user.pendingEmail,
+    subject: "🔐 Security Verification: New Email Sync",
+    text: `Your Adhya Computer verification code is: ${otp}. It expires in 10 mins.`,
+    html: otpEmailTemplate(otp) // Use the template here
+  });
 
   res.json({
     message: "OTP resent successfully"

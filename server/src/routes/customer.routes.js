@@ -16,24 +16,25 @@ import {
   getSingleCustomer,
   updateCustomerDetails
 } from "../controllers/customer.controller.js";
+import { authorize } from "../middleware/authorize.middleware.js";
 
 const router = express.Router();
 router.use(protect);
 
 router.post("/", addCustomer);
 router.get("/", getCustomers);
-router.get("/customer/:id",getSingleCustomer);
-router.patch("/customer/:id",updateCustomerDetails)
-router.get("/trash",getTrashCustomers);
+router.get("/customer/:id", getSingleCustomer);
+router.patch("/customer/:id", authorize("owner"), updateCustomerDetails)
+router.get("/trash", authorize("owner"), getTrashCustomers);
 router.get("/search", searchCustomer);
-router.put("/:id/trash", softDeleteCustomer);
-router.put("/:id/restore", restoreCustomer);
-router.delete("/:id/permanent", permanentDeleteCustomer);
-router.put("/bulk-trash", bulkSoftDelete);
-router.put("/bulk-restore", bulkRestore);
-router.post("/bulk-permanent", bulkPermanentDelete);
+router.put("/:id/trash", authorize("owner"), softDeleteCustomer);
+router.put("/:id/restore", authorize("owner"), restoreCustomer);
+router.delete("/:id/permanent", authorize("owner"), permanentDeleteCustomer);
+router.put("/bulk-trash", authorize("owner"), bulkSoftDelete);
+router.put("/bulk-restore", authorize("owner"), bulkRestore);
+router.post("/bulk-permanent", authorize("owner"), bulkPermanentDelete);
 router.post("/:id/documents", addDocument);
-router.delete("/:customerId/documents/:documentId", deleteDocument);
+router.delete("/:customerId/documents/:documentId", authorize("owner"), deleteDocument);
 
 
 export default router;
