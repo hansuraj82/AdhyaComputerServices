@@ -8,7 +8,9 @@ import {
   MdOutlineReceiptLong,
   MdOutlinePolicy,
   MdOutlineAnalytics,
-  MdOutlineSupportAgent
+  MdOutlineSupportAgent,
+  MdBadge,
+  MdManageHistory
 } from "react-icons/md";
 import { AuthContext } from "../../context/AuthContext";
 import { useContext } from "react";
@@ -47,8 +49,8 @@ export default function Sidebar({ isOpen, onClose }) {
               <NavItem to="/customers" end={true} icon={<MdPeople />} label="All Customers" onClick={onClose} styles={{ linkBase, getLinkStyles }} />
               <NavItem to="/customers/add" icon={<MdPersonAddAlt />} label="New Registration" onClick={onClose} styles={{ linkBase, getLinkStyles }} />
               {auth.role === "owner" && (<><NavItem to="/agent" icon={<MdOutlineSupportAgent />} label="Agent Network" onClick={onClose} styles={{ linkBase, getLinkStyles }} />
-                <NavItem to="/staff" icon={<MdOutlineSupportAgent />} label="Staff" onClick={onClose} styles={{ linkBase, getLinkStyles }} />
-                <NavItem to="/audit" icon={<MdOutlineSupportAgent />} label="Audit Logs" onClick={onClose} styles={{ linkBase, getLinkStyles }} /></>)}
+                <NavItem to="/staff" icon={<MdBadge />} label="Staff" onClick={onClose} styles={{ linkBase, getLinkStyles }} />
+                <NavItem to="/audit" icon={<MdManageHistory />} label="Audit Logs" onClick={onClose} styles={{ linkBase, getLinkStyles }} /></>)}
             </SidebarGroup>
 
             <div className="mx-6 my-2 border-t border-slate-200/50" />
