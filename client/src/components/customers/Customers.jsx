@@ -10,7 +10,6 @@ import CustomerTable from "../../components/customers/CustomerTable";
 import Pagination from "../../components/customers/Pagination";
 import toast from "react-hot-toast";
 import ConfirmModal from "../ui/ConfirmModal";
-import NewFeatureReveal from "./NewFeatureReveal";
 
 export default function Customers() {
     document.title = "Home | Adhya Computer"
@@ -131,17 +130,10 @@ export default function Customers() {
     };
 
     const isSomeSelected = selectedIds.length > 0 && !isAllSelected;
-
-    const [showNewUpdate,setShowNewUpdate] = useState(false);
-
-    const onClose = () => {
-        setShowNewUpdate(false);
-    }
     
     return (
 
         <div className="max-w-[1600px] mx-auto ">
-            {showNewUpdate && <NewFeatureReveal onClose={onClose} />}
             {/* Header Section */}
             <div className="flex flex-col lg:flex-row lg:items-end justify-between gap-6 mb-8">
                 {/* Left Side: Title & Description */}
